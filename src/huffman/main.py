@@ -1,4 +1,4 @@
-import FileIO
+import fileIO
 
-t = FileIO.readFile1("a_very_short_story.txt")
+t = fileIO.readFile1("a_very_short_story.txt")
 t.printt()
