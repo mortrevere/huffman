@@ -8,7 +8,7 @@ def readFile1(file):
 
     with open(file) as f:
         for line in f:
-            for c in line.strip():
+            for c in line:
                 dick[c] = dick.get(c, 0) + 1
 
     for c in dick.keys():

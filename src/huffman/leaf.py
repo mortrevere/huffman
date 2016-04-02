@@ -10,3 +10,6 @@ class leaf:
 
     def organize(self):
         return True
+
+    def getIndex(self):
+        return {self.value: ""}

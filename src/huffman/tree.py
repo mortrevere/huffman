@@ -15,7 +15,7 @@ class tree:
         child.parent = self
         self.children.append(child)
         self.setW()
-        if self.parent != None:
+        if self.parent is not None:
             self.parent.setW()
 
     def addChildren(self, children):
@@ -37,8 +37,21 @@ class tree:
     def organize(self):
         while len(self.children) > 2:
             self.sort()
-            # Il faut jamais modifier le self.children directement
             self.setChildren(
-                [tree([self.children[0], self.children[1]])] + self.children[2:])
+                [tree([self.children[0], self.children[1]])] +
+                self.children[2:])
         for child in self.children:
             child.organize()
+
+    def getIndex(self):
+        d0 = self.children[0].getIndex()
+        for k in d0.keys():
+            d0[k] = "0" + d0[k]
+
+        d1 = self.children[1].getIndex()
+        for k in d1.keys():
+            d1[k] = "1" + d1[k]
+
+        d0.update(d1)
+
+        return d0
