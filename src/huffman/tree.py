@@ -55,3 +55,6 @@ class tree:
         d0.update(d1)
 
         return d0
+
+    def getValue(self, address):
+        return self.children[int(str(address[0]))].getValue(address[1:])

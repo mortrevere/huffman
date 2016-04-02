@@ -13,3 +13,6 @@ class leaf:
 
     def getIndex(self):
         return {self.value: ""}
+
+    def getValue(self, address):
+        return self.value
