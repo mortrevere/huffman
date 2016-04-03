@@ -1,3 +1,6 @@
+import leaf
+
+
 class tree:
     """
     The huffman tree itself.
@@ -6,14 +9,31 @@ class tree:
 
     def __init__(self, arg1=[]):
         if isinstance(arg1, str):
-            # delete first [ and last ] then split with ] and delete last
-            # element that is empty
-            p = arg1[1:-1].split("]")[:-1]
-            self.setChildren([e+"]" for e in p])
+            p = arg1[4:]
+            n1 = int(arg1[:4], 2)
+            k = 0
+            dic = {}  # We recreate the reverse index from addresses
+            while k < 256:
+                n2 = int(p[:n1], 2)  # nb of bits to code the add
+                dic[p[n1:n1 + n2]] = chr(k)  # reverse index
+                p = p[n1 + n2:]
+                k += 1
+            arg1 = dic
+        if isinstance(arg1, dict):
+            if arg1.get("0", None) is not None:
+                self.addChild(leaf.leaf(arg1["0"]))
+            else:
+                self.addChild(
+                    tree({k[1:]: arg1[k] for k in arg1.keys() if k[0] == "0"}))
+            if arg1.get("1", None) is not None:
+                self.addChild(leaf.leaf(arg1["1"]))
+            else:
+                self.addChild(
+                    tree({k[1:]: arg1[k] for k in arg1.keys() if k[0] == "1"}))
         else:
             self.setChildren(arg1)
+            self.setW()
         self.parent = None
-        self.setW()
         self.isLeaf = False
 
     def disp(self, lvl=0):
@@ -83,7 +103,11 @@ class tree:
         return str(self.w)
 
     def __str__(self):
-        s = "["
-        for child in self.children:
-            s += str(child)
-        return s + "]"
+        dic = self.getIndex()
+        # number of bits to code the max depth
+        m = len(bin(len(self))) - 2
+        s = '{0:04b}'.format(m)
+        for k in range(256):
+            add = dic.get(ord(k), "")
+            s += ('{0:0' + m + 'b}{}').format(len(add), add)
+        return s
