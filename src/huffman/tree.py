@@ -8,6 +8,8 @@ class tree:
     """
 
     def __init__(self, arg1=[]):
+        self.parent = None
+        self.isLeaf = False
         if isinstance(arg1, str):
             p = arg1[4:]
             n1 = int(arg1[:4], 2)
@@ -33,8 +35,7 @@ class tree:
         else:
             self.setChildren(arg1)
             self.setW()
-        self.parent = None
-        self.isLeaf = False
+        
 
     def disp(self, lvl=0):
         print("--" * lvl + "(" + str(self.w) + ")")
