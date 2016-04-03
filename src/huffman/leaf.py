@@ -26,3 +26,6 @@ class leaf:
 
     def getSize(self):
         return 1
+
+    def __str__(self):
+        return str(self.value)+":"+str(self.w)
