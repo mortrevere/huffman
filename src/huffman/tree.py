@@ -60,8 +60,8 @@ class tree:
 
         return d0
 
-    def getValue(self, address, length = 0):
+    def getValue(self, address, length=0):
         if address != '':
-            return self.children[int(str(address[0]))].getValue(address[1:], length+1)
+            return self.children[int(str(address[0]))].getValue(address[1:], length + 1)
         else:
-            return ('',0)
+            return ('', 0)

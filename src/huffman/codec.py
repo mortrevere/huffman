@@ -2,6 +2,7 @@ from tree import *
 from leaf import *
 import time
 
+
 class codec:
     """
     Encoder/decoder for huffman compression
@@ -11,7 +12,8 @@ class codec:
         self.t = tree()
         self.dic = {}
         self.buf = ''
-        self.stats = {'sourceLen' : 0, 'outLen' : 0, 'processTime' : 0, 'loadingTime' : 0}
+        self.stats = {
+            'sourceLen': 0, 'outLen': 0, 'processTime': 0, 'loadingTime': 0}
 
     def load(self, path):
         t1 = time.clock()
@@ -34,11 +36,14 @@ class codec:
         """
         t1 = time.clock()
         addr = self.t.getIndex()
-        self.buf = ''.join([addr[c] for c in self.buf]) #convert chars to binary strings
-        self.buf = [self.buf[i:i+8] for i in range(0, len(self.buf), 8)] #split buffer into bytes (as strings)
-        self.buf[-1] += '0' * (8-len(self.buf[-1])) #pad last bits to be exactky a byte
-        self.buf = [chr(int(c,2)) for c in self.buf] #bytes to char
-        self.buf = ''.join(self.buf) #buf to string
+        # convert chars to binary strings
+        self.buf = ''.join([addr[c] for c in self.buf])
+        # split buffer into bytes (as strings)
+        self.buf = [self.buf[i:i + 8] for i in range(0, len(self.buf), 8)]
+        # pad last bits to be exactky a byte
+        self.buf[-1] += '0' * (8 - len(self.buf[-1]))
+        self.buf = [chr(int(c, 2)) for c in self.buf]  # bytes to char
+        self.buf = ''.join(self.buf)  # buf to string
         self.stats['outLen'] = len(self.buf)
         self.stats['processTime'] = time.clock() - t1
         return self.buf
@@ -46,7 +51,7 @@ class codec:
     def decode(self):
         t1 = time.clock()
         out = ''
-        tmp = ['',1]
+        tmp = ['', 1]
         self.buf = list(self.buf)
         self.buf = ''.join(['{0:08b}'.format(ord(c)) for c in self.buf])
         while tmp[1] != 0:
