@@ -9,6 +9,7 @@ class tree:
         self.setChildren(children)
         self.w = 0
         self.setW()
+        self.isLeaf = False
 
     def disp(self, lvl=0):
         print("--" * lvl + "(" + str(self.w) + ")")
