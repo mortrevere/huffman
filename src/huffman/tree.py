@@ -4,10 +4,15 @@ class tree:
     Each node child of each node can be another tree or a leaf.
     """
 
-    def __init__(self, children=[]):
+    def __init__(self, arg1=[]):
+        if isinstance(arg1, str):
+            # delete first [ and last ] then split with ] and delete last
+            # element that is empty
+            p = arg1[1:-1].split("]")[:-1]
+            self.setChildren([e+"]" for e in p])
+        else:
+            self.setChildren(arg1)
         self.parent = None
-        self.setChildren(children)
-        self.w = 0
         self.setW()
         self.isLeaf = False
 
@@ -74,5 +79,11 @@ class tree:
     def getSize(self):
         return sum([child.getSize() for child in self.children])
 
-    def __str__(self):
+    def __repr__(self):
         return str(self.w)
+
+    def __str__(self):
+        s = "["
+        for child in self.children:
+            s += str(child)
+        return s + "]"
