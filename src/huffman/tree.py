@@ -1,4 +1,8 @@
 class tree:
+"""
+        The huffman tree itself.
+        Each node child of each node can be another tree or a leaf.
+"""
 
     def __init__(self, children=[]):
         self.parent = None
@@ -6,10 +10,10 @@ class tree:
         self.w = 0
         self.setW()
 
-    def printt(self, lvl=0):
+    def print(self, lvl=0):
         print("--" * lvl + "(" + str(self.w) + ")")
         for child in self.children:
-            child.printt(lvl + 1)
+            child.print(lvl + 1)
 
     def addChild(self, child):
         child.parent = self

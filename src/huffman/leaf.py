@@ -1,11 +1,14 @@
 class leaf:
+"""
+        Leaves of a huffman tree
+"""
 
     def __init__(self, value, w):
         self.parent = None
         self.value = value
         self.w = w
 
-    def printt(self, lvl=0):
+    def print(self, lvl=0):
         print("--" * lvl + "({}, {})".format(self.value, self.w))
 
     def organize(self):

@@ -1,5 +1,7 @@
-import fileIO
+#!/usr/bin/python3.4
 
-t = fileIO.readFile1("a_very_short_story.txt")
-t.printt()
-print(t.getIndex())
+from codec import *
+
+io = codec("a_very_short_story.txt")
+
+io.t.print()
