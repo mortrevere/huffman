@@ -109,6 +109,6 @@ class tree:
         m = len(bin(len(self))) - 2
         s = '{0:04b}'.format(m)
         for k in range(256):
-            add = dic.get(ord(k), "")
+            add = dic.get(chr(k), "")
             s += ('{0:0' + m + 'b}{}').format(len(add), add)
         return s
