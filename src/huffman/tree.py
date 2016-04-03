@@ -9,11 +9,12 @@ class tree:
         self.setChildren(children)
         self.w = 0
         self.setW()
+        self.isLeaf = False
 
-    def print(self, lvl=0):
+    def disp(self, lvl=0):
         print("--" * lvl + "(" + str(self.w) + ")")
         for child in self.children:
-            child.print(lvl + 1)
+            child.disp(lvl + 1)
 
     def addChild(self, child):
         child.parent = self
@@ -60,8 +61,15 @@ class tree:
 
         return d0
 
-    def getValue(self, address, length = 0):
+    def getValue(self, address, length=0):
         if address != '':
-            return self.children[int(str(address[0]))].getValue(address[1:], length+1)
+            return self.children[int(str(address[0]))].getValue(address[1:],
+                                                                length + 1)
         else:
-            return ('',0)
+            return ('', 0)
+
+    def __len__(self):
+        return max([1 + len(child) for child in self.children])
+
+    def getSize(self):
+        return sum([child.getSize() for child in self.children])
