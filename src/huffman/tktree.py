@@ -14,11 +14,22 @@ def canv(parent, t, w, h):
     cv = tk.Canvas(parent, width=w, height=h, bg="white")
     wt = len(t)
     ht = t.getSize()
+    print(wt)
     w2 = w // (2 * wt + 1)
     h2 = h // (2 * ht + 1)
-    genTree(w2, h // 2, h, w2, h2, t)  # Generate the visual tree recursively
+    # Generate the visual tree recursively
+    genTree(cv, w2, h // 2, h, w2, h2, t)
     return cv
 
 
-def genTree(x0, y0, dy, w2, h2, t):
+def genTree(cv, x0, y0, dy, w2, h2, t):
+    cv.create_rectangle(x0, y0 - h2 // 2, x0 + w2, y0 + h2 // 2)
+    st = t.getSize()
+    dy0 = y0 - dy//2
+    if not t.isLeaf:
+        for child in t.children:
+            hc = int(dy*child.getSize()/st)
+            genTree(cv, x0 + w2*2, dy0 + hc // 2, hc, w2, h2, child)
+            cv.create_line(x0 + w2, y0, x0 + w2*2, dy0 + hc // 2)
+            dy0 += hc
     return True  # TODO

@@ -69,7 +69,7 @@ class tree:
             return ('', 0)
 
     def __len__(self):
-        return max([len(child) for child in self.children])
+        return max([1 + len(child) for child in self.children])
 
     def getSize(self):
         return sum([child.getSize() for child in self.children])
