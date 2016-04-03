@@ -3,11 +3,8 @@ class leaf:
     Leaves of a huffman tree
     """
 
-    def __init__(self, arg1, w=0):
-        if isinstance(arg1, str):
-            self.value = arg1[1:-1]
-        else:
-            self.value = arg1
+    def __init__(self, value, w=0):
+        self.value = value
         self.w = w
         self.parent = None
         self.isLeaf = True
@@ -32,6 +29,3 @@ class leaf:
 
     def __repr__(self):
         return str(self.value)+":"+str(self.w)
-
-    def __str__(self):
-        return "["+str(self.value)+"]"
