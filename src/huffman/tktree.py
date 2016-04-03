@@ -1,8 +1,9 @@
 import tkinter as tk
 
 
-def show(t, width=30, font=8):
+def show(t, title, width=30, font=6):
     win = tk.Tk()
+    win.title(title)
     cv = canv(win, t, width, font)
     cv.pack()
     win.mainloop()
@@ -25,8 +26,11 @@ def canv(parent, t, w2, h2):
 
 
 def genTreeH(cv, x0, y0, dy, w2, h2, t):
+    color = "white"
+    if t.isLeaf:
+        color = "yellow"
     cv.create_rectangle(
-        x0, y0 - h2 // 2, x0 + w2, y0 + h2 // 2, outline="lightgrey")
+        x0, y0 - h2 // 2, x0 + w2, y0 + h2 // 2, outline="lightgrey", fill=color)
     cv.create_text(
         x0 + w2 / 2, y0, font=("Lucida console", int(h2 / 1.1)), text=repr(t))
     st = t.getSize()

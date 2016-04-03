@@ -10,6 +10,7 @@ class tree:
     def __init__(self, arg1=[]):
         self.parent = None
         self.isLeaf = False
+        self.children = []
         if isinstance(arg1, str):
             p = arg1[4:]
             n1 = int(arg1[:4], 2)
@@ -17,7 +18,9 @@ class tree:
             dic = {}  # We recreate the reverse index from addresses
             while k < 256:
                 n2 = int(p[:n1], 2)  # nb of bits to code the add
-                dic[p[n1:n1 + n2]] = chr(k)  # reverse index
+                add = p[n1:n1 + n2]
+                if add != "":
+                    dic[p[n1:n1 + n2]] = k  # reverse index
                 p = p[n1 + n2:]
                 k += 1
             arg1 = dic
@@ -35,7 +38,6 @@ class tree:
         else:
             self.setChildren(arg1)
             self.setW()
-        
 
     def disp(self, lvl=0):
         print("--" * lvl + "(" + str(self.w) + ")")
@@ -109,6 +111,6 @@ class tree:
         m = len(bin(len(self))) - 2
         s = '{0:04b}'.format(m)
         for k in range(256):
-            add = dic.get(chr(k), "")
+            add = dic.get(k, "")
             s += ('{0:0' + str(m) + 'b}').format(len(add)) + add
         return s
