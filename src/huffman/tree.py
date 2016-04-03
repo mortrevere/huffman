@@ -61,4 +61,7 @@ class tree:
         return d0
 
     def getValue(self, address, length = 0):
-        return self.children[int(str(address[0]))].getValue(address[1:], length+1)
+        if address != '':
+            return self.children[int(str(address[0]))].getValue(address[1:], length+1)
+        else:
+            return ('',0)
