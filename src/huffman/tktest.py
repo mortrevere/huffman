@@ -2,5 +2,5 @@ from codec import *
 import tktree
 
 c = codec()
-c.load("tests/a_very_short_story.txt")
+c.load("tests/gadsby.txt")
 tktree.show(c.t, 900, 800)
