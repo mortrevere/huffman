@@ -47,6 +47,7 @@ class codec:
         # pad last bits to be exactky a byte
         self.buf[-1] += '0' * (8 - len(self.buf[-1]))
         self.buf = [int(c, 2) for c in self.buf]  # bytes to char
+
         self.stats['outLen'] = len(self.buf)
         self.stats['processTime'] = time.clock() - t1
 
@@ -75,7 +76,14 @@ class codec:
 
     def write(self, path):
         t1 = time.clock()
-        header = ''
+
+        tree = str(self.t)
+        header = tree
+        header = '0'*(18-len(bin(len(header)))) + bin(len(header))[2:]
+        header += tree
+        print('header : ', header)
+        #self.buf = [int(header[0: , ] + self.buf
+
         with open(path, 'wb') as f:
             f.write(bytes(self.buf))
 
