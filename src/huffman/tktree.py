@@ -1,6 +1,4 @@
 import tkinter as tk
-from tree import *
-from leaf import *
 
 
 def show(t, width=30, font=8):
@@ -9,9 +7,11 @@ def show(t, width=30, font=8):
     cv.pack()
     win.mainloop()
 
+
 def saveasimage(path, t, width=40, font=8):
     cv = canv(None, t, width, font)
     cv.postscript(file=path, colormode='color')
+
 
 def canv(parent, t, w2, h2):
     l = len(t)
@@ -28,7 +28,7 @@ def genTreeH(cv, x0, y0, dy, w2, h2, t):
     cv.create_rectangle(
         x0, y0 - h2 // 2, x0 + w2, y0 + h2 // 2, outline="lightgrey")
     cv.create_text(
-        x0 + w2 / 2, y0, font=("Lucida console", int(h2 / 1.1)), text=str(t))
+        x0 + w2 / 2, y0, font=("Lucida console", int(h2 / 1.1)), text=repr(t))
     st = t.getSize()
     dy0 = y0 - dy // 2
     if not t.isLeaf:
