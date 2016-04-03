@@ -11,7 +11,7 @@ class codec:
     def __init__(self):
         self.t = tree()
         self.dic = {}
-        self.buf = ''
+        self.buf = []
         self.stats = {
             'sourceLen': 0, 'outLen': 0, 'processTime': 0, 'loadingTime': 0}
 
@@ -19,16 +19,13 @@ class codec:
         t1 = time.clock()
 
         with open(path, "rb") as f:
-            byte = f.read(1)
+            byte = f.read(4096)
             while byte:
-                # Do stuff with byte.
-                byte = f.read(1)
-        '''with open(path) as f:
-            for line in f:
-                for c in line:
+                for c in byte:
                     self.dic[c] = self.dic.get(c, 0) + 1
-                self.buf += line
-        '''
+                self.buf += list(byte)
+                byte = f.read(4096)
+
         for c in self.dic.keys():
             self.t.addChild(leaf(c, self.dic[c]))
 
@@ -48,23 +45,26 @@ class codec:
         self.buf = [self.buf[i:i + 8] for i in range(0, len(self.buf), 8)]
         # pad last bits to be exactky a byte
         self.buf[-1] += '0' * (8 - len(self.buf[-1]))
-        self.buf = [chr(int(c, 2)) for c in self.buf]  # bytes to char
-        self.buf = ''.join(self.buf)  # buf to string
+        self.buf = [int(c, 2) for c in self.buf]  # bytes to char
+
         self.stats['outLen'] = len(self.buf)
         self.stats['processTime'] = time.clock() - t1
         return self.buf
 
     def decode(self):
         t1 = time.clock()
-        out = ''
+        out = []
         tmp = ['', 1]
-        self.buf = list(self.buf)
-        self.buf = ''.join(['{0:08b}'.format(ord(c)) for c in self.buf])
+
+        self.buf = ''.join(['{0:08b}'.format(c) for c in self.buf])
+
         while tmp[1] != 0:
             tmp = self.t.getValue(self.buf)
-            out += tmp[0]
+            out.append(tmp[0])
             self.buf = self.buf[tmp[1]:]
-        self.buf = out
+
+        #remove last bogus tmp ('', 0) received
+        self.buf = out[:-2]
 
         self.stats['outLen'] = len(self.buf)
         self.stats['processTime'] = time.clock() - t1
