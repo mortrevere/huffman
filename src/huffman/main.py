@@ -8,10 +8,9 @@ io.load("a_very_short_story.txt")
 source = io.buf
 io.encode()
 
-print("Space saved : ", 100 - (io.stats['outLen']/io.stats['sourceLen'])*100, "%")
+print("Space saved : ", round((1 - io.stats['outLen']/io.stats['sourceLen'])*100,2), "%")
 
 io.decode()
-
 out = io.buf
 
 print('Self-test result : ', end = '')
@@ -25,10 +24,18 @@ else:
         print('\t /!\ Different length :\n\t\t Source :', len(source), '\n\t\t Output :', len(out),
               '\n\t\t Difference :', delta)
 
-        print('\t Difference on common length :')
-        for offset in range(0, delta):
+        print('\t Difference on common length ({} bytes):'.format(common))
+        for offset in range(0, delta+1):
             diff = 0
             for i in range(common):
-                if source[i] != out[i]:
+                if delta < 0:
+                    a = source[i]
+                    b = out[i+offset]
+                else:
+                    a = source[i+offset]
+                    b = out[i]
+
+                if a != b:
                     diff += 1
-            print('\t\t offset {} : {} %\n'.format(offset, (diff/common)*100 ))
+
+            print('\t\t offset {} : {}% ({} bytes)'.format(offset, (diff/common)*100, diff))
