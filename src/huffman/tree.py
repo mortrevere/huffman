@@ -1,8 +1,8 @@
 class tree:
-"""
-        The huffman tree itself.
-        Each node child of each node can be another tree or a leaf.
-"""
+    """
+    The huffman tree itself.
+    Each node child of each node can be another tree or a leaf.
+    """
 
     def __init__(self, children=[]):
         self.parent = None

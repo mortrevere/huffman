@@ -1,7 +1,7 @@
 class leaf:
-"""
-        Leaves of a huffman tree
-"""
+    """
+    Leaves of a huffman tree
+    """
 
     def __init__(self, value, w):
         self.parent = None

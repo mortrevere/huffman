@@ -2,14 +2,15 @@ from tree import *
 from leaf import *
 
 class codec:
-"""
-        Encoder/decoder for huffman compression
-"""
+    """
+    Encoder/decoder for huffman compression
+    """
 
-    def __init__(self, path):
+    def __init__(self):
         self.t = tree()
         self.dic = {}
 
+    def load(self, path):
         with open(path) as f:
             for line in f:
                 for c in line:

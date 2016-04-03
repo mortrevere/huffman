@@ -2,6 +2,7 @@
 
 from codec import *
 
-io = codec("a_very_short_story.txt")
+io = codec()
+io.load("a_very_short_story.txt")
 
 io.t.print()
