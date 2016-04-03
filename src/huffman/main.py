@@ -3,6 +3,5 @@
 from codec import *
 
 io = codec()
-io.load("a_very_short_story.txt")
-
-io.t.print()
+io.load("bf.txt")
+io.encode()

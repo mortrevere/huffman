@@ -9,12 +9,14 @@ class codec:
     def __init__(self):
         self.t = tree()
         self.dic = {}
+        self.buf = []
 
     def load(self, path):
         with open(path) as f:
             for line in f:
                 for c in line:
                     self.dic[c] = self.dic.get(c, 0) + 1
+                    self.buf.append(c)
 
         for c in self.dic.keys():
             self.t.addChild(leaf(c, self.dic[c]))
@@ -22,7 +24,15 @@ class codec:
         self.t.organize()
 
     def encode(self):
-        pass
+        """
+        Handle compression
+        """
+        addr = self.t.getIndex()
+        self.buf = [addr[c] for c in self.buf] #convert chars to binary strings
+        self.buf = ''.join(self.buf) #long binary string
+        self.buf = [self.buf[i:i+8] for i in range(0, len(self.buf), 8)] #split buffer into bytes (as strings)
+        self.buf = [chr(int(c,2)) for c in self.buf] #bytes to char
+        self.buf = ''.join(self.buf) #buf to string
 
     def write():
         pass
