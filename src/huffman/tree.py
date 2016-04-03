@@ -73,3 +73,6 @@ class tree:
 
     def getSize(self):
         return sum([child.getSize() for child in self.children])
+
+    def __str__(self):
+        return str(self.w)
