@@ -28,4 +28,4 @@ class leaf:
         return 1
 
     def __repr__(self):
-        return str(self.value)+":"+str(self.w)
+        return str(chr(self.value))+":"+str(self.w)

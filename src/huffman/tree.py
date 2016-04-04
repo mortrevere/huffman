@@ -1,5 +1,5 @@
 import leaf
-
+import tktree
 
 class tree:
     """
@@ -75,6 +75,17 @@ class tree:
                 self.children[2:])
         for child in self.children:
             child.organize()
+
+    def dynorg(self, win, time, root):
+        while len(self.children) > 2:
+            self.sort()
+            self.setChildren(
+                [tree([self.children[0], self.children[1]])] +
+                self.children[2:])
+            win.show(root, time)
+        for child in self.children:
+            if not child.isLeaf:
+                child.dynorg(win, time, root)
 
     def getIndex(self):
         d0 = self.children[0].getIndex()
