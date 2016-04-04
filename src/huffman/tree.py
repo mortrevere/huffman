@@ -105,7 +105,7 @@ class tree:
 
     def getValue2(self, address, k=0, length=0):
         if address != '':
-            return self.children[int(str(address[k]))].getValue(address, k + 1,
+            return self.children[int(str(address[k]))].getValue2(address, k + 1,
                                                                 length + 1)
         else:
             return ('', 0)
