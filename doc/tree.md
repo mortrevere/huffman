@@ -1,14 +1,14 @@
 # Huffman Tree
 ## I - Theory
 ### A - Definition
-A huffman tree is composed of nodes and leaves. Each possesses a weight that help sorting them. The heavier a node or a leaf is, the closer to the root it is. If the leaf weight represent a letter frequency, it means that a frequent letter have a short path in the tree and getting to it cost less data.
+A tree is a data-structure composed of nodes and leaves. Each leaf is a data and to access it, there is a node path. In an Huffman tree, each leaf and node possesses a weight that help organizing the tree. The heavier a node or a leaf is, the closer to the root it is. If the leaf weight represent a letter frequency, it means that a frequent letter have a short path in the tree and getting to it cost less data.
 
 ![alt text][example1]
 
 Here we create a tree from the sentence "this is a short example".
-We can see each node with its weight and each leaf (higlighted) with the letter it represent and its weight/number of occurences.
+We can see each node with its weight and each leaf (highlighted) with the letter it represent and its weight/number of occurrences. Each node possesses only two children to create a binary path for future [compression](#c---compressiondecompression).
 ### B - Basic technique of creation
-We start from a text, (in every example, we're going to use "this is a short example" for the simplicity) and we create at the root each leaves. Each leaves is created from a letter and its number of occurences. Then we can start organizing the tree. First we take the two lighter nodes/leaves of the root and we group them in a single node. We repeat this traitment until there is only two nodes/leaves left
+We start from a text, (in every example, we're going to use "this is a short example" for the simplicity) and we create at the root each leaves. Each leaves is created from a letter and its number of occurrences. Then we can start organizing the tree. First we take the two lighter nodes/leaves of the root and we group them in a single node. We repeat this treatment until there is only two nodes/leaves left
 
 ![alt text][example2]
 
