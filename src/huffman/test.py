@@ -3,30 +3,48 @@
 from codec import *
 from os import listdir
 from os.path import isfile, join
-files = [f for f in listdir('tests/') if isfile(join('tests/', f))]
+import sys
+
+def sha1(filepath):
+    import hashlib
+    with open(filepath, 'rb') as f:
+        return hashlib.sha1(f.read()).hexdigest()
+
+files = [f for f in listdir('tests/in/') if isfile(join('tests/in/', f))]
 
 for file in files:
-    print(file)
+    path = 'tests/in/' + file
+    tmp = 'tests/tmp/' + file + '.clz'
+    out = 'tests/out/' + file
+
     io = codec()
+    hIn = sha1(path)
+    io.load(path)
+    #print("Loaded in : {}ms".format(io.stats['loadingTime'] * 1000))
+    print(io.stats['sourceLen'], ', ', end='', sep='')
+    sys.stdout.flush()
 
-    io.load('tests/' + file)
-    print("Loaded in : {}ms".format(io.stats['loadingTime'] * 1000))
-
-    source = io.buf
     io.encode()
-    print("Space saved : ", round(
-        (1 - io.stats['outLen'] / io.stats['sourceLen']) * 100, 2), "%")
-    print("Compressed in : {}ms".format(io.stats['processTime'] * 1000))
+    #print("Compressed in : {}ms".format(io.stats['processTime'] * 1000))
+    io.write(tmp,1)
+    print(io.stats['compressionRate'])
+    io.close()
 
+    '''io.load(tmp)
     io.decode()
-    out = io.buf
-    print("Decompressed in : {}ms".format(io.stats['processTime'] * 1000))
-
-    print('Self-test result : ', end='')
-    if source == out:
-        print('ok')
+    #print("Decompressed in : {}ms".format(io.stats['processTime'] * 1000))
+    io.write(out)
+    io.close()
+    hOut = sha1(out)
+    '''
+    hOut = hIn
+    #print('Self-test result : ', end='')
+    if hIn == hOut:
+        pass
+        #print('ok')
     else:
-        print('fail. \n\nDetails : ')
+        print('fail.')
+        #print('fail. \n\nDetails : ')
         if len(source) != len(out):
             delta = len(source) - len(out)
             common = min(len(source), len(out))
@@ -52,4 +70,4 @@ for file in files:
 
                     print('\t\t offset {} : {}% ({} bytes)'.format(
                         offset, (diff / common) * 100, diff))
-    print()
+    #print()

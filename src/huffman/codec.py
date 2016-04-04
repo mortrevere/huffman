@@ -12,24 +12,37 @@ class codec:
         self.t = tree()
         self.dic = {}
         self.buf = []
+        self.header = []
+
         self.stats = {
-            'sourceLen': 0, 'outLen': 0, 'processTime': 0, 'loadingTime': 0}
+            'sourceLen': 0, 'outLen': 0, 'processTime': 0, 'loadingTime': 0, 'compressionRate' : 0}
 
-    def load(self, path):
+    def load(self, path, debug = 0):
         t1 = time.clock()
-
         with open(path, "rb") as f:
+            seek = 0
+            treeLen = 0
+            bodyLen = 0
             byte = f.read(4096)
             while byte:
                 for c in byte:
+                    #we build the header even if we are loading an uncompressed file
+                    if seek <= 1: #bytes coding tree length if compressed file
+                        treeLen += c * (-255*seek + 256)
+                        self.treeLen = treeLen
+                    if 2 <= seek <= treeLen + 5:
+                        self.header.append(c)
+
                     self.dic[c] = self.dic.get(c, 0) + 1
+                    seek += 1
+
                 self.buf += list(byte)
                 byte = f.read(4096)
 
-        for c in self.dic.keys():
-            self.t.addChild(leaf(c, self.dic[c]))
-
-        self.t.organize()
+            self.header = ''.join(['{0:08b}'.format(c) for c in self.header])[0:treeLen+24]
+            if len(self.header) > 24:
+                self.bodyLen = int(self.header[-24:], 2)
+                self.header = self.header[0:-24]
 
         self.stats['sourceLen'] = len(self.buf)
         self.stats['loadingTime'] = time.clock() - t1
@@ -39,12 +52,16 @@ class codec:
         Handle compression
         """
         t1 = time.clock()
+
+        for c in self.dic.keys():
+            self.t.addChild(leaf(c, self.dic[c]))
+
+        self.t.organize()
+
         addr = self.t.getIndex()
-        # convert chars to binary strings
+
         self.buf = ''.join([addr[c] for c in self.buf])
-        # split buffer into bytes (as strings)
         self.buf = [self.buf[i:i + 8] for i in range(0, len(self.buf), 8)]
-        # pad last bits to be exactky a byte
         self.buf[-1] += '0' * (8 - len(self.buf[-1]))
         self.buf = [int(c, 2) for c in self.buf]  # bytes to char
 
@@ -55,36 +72,55 @@ class codec:
 
     def decode(self):
         t1 = time.clock()
+
         out = []
-        tmp = ['', 1]
+        tmp = [0, 1]
+        #self.header = ''.join(['{0:08b}'.format(c) for c in self.header])[0:self.treeLen]
 
+        self.t = tree(self.header)
         self.buf = ''.join(['{0:08b}'.format(c) for c in self.buf])
+        self.buf = self.buf[len(self.header)+16+24:]
 
-        while tmp[1] != 0:
+        while self.bodyLen > 0:
             tmp = self.t.getValue(self.buf)
-            print(tmp, self.buf)
             out.append(tmp[0])
             self.buf = self.buf[tmp[1]:]
+            self.bodyLen -= 1
 
-        #remove last bogus tmp ('', 0) received
-        self.buf = out[:-2]
-
+        self.buf = out
         self.stats['outLen'] = len(self.buf)
         self.stats['processTime'] = time.clock() - t1
 
         return self.buf
 
-    def write(self, path):
+    def write(self, path, enc = False):
         t1 = time.clock()
+        if enc:
+            tree = str(self.t)
+            header = tree
+            header = '0'*(18-len(bin(len(header)))) + bin(len(header))[2:]
+            header += tree
+            header += '0'*(26-len(bin(self.stats['sourceLen']))) + bin(self.stats['sourceLen'])[2:]
 
-        tree = str(self.t)
-        header = tree
-        header = '0'*(18-len(bin(len(header)))) + bin(len(header))[2:]
-        header += tree
-        print('header : ', header)
-        #self.buf = [int(header[0: , ] + self.buf
+            self.buf = header + ''.join(['{0:08b}'.format(c) for c in self.buf])
+            while len(self.buf)%8 != 0:
+                self.buf += '0'
+            self.buf = [int(self.buf[i:i + 8],2) for i in range(0, len(self.buf), 8)]
 
         with open(path, 'wb') as f:
             f.write(bytes(self.buf))
 
         self.stats['processTime'] = time.clock() - t1
+        self.stats['compressionRate'] = (1 - len(self.buf)/self.stats['sourceLen'])*100
+
+
+    def close(self):
+        self.t = tree()
+        self.dic = {}
+        self.buf = []
+        self.header = []
+        self.bodyLen = 0
+        self.treeLen = 0
+
+        self.stats = {
+            'sourceLen': 0, 'outLen': 0, 'processTime': 0, 'loadingTime': 0}
