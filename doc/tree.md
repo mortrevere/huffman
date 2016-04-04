@@ -7,15 +7,15 @@
 ## II - Python Implementation
 ### A - Building
 #### __init__
-'''python
+```python
 	def __init__(self, arg1=[]):
 	        self.parent = None
 	        self.isLeaf = False
 	        self.setChildren(arg1)
 	        self.setW()
-'''
+```
 #### addChild/addChildren/setChildren
-'''python
+```python
 	def addChild(self, child):
         child.parent = self
         self.children.append(child)
@@ -30,21 +30,21 @@
 	def setChildren(self, children):
         self.children = []
         self.addChildren(children)
-'''
+```
 #### setW
-'''python
+```python
 	def setW(self):
         self.w = 0
         for child in self.children:
             self.w += child.w
-'''
+```
 #### sort
-'''python
+```python
 	def sort(self):
         self.children = sorted(self.children, key=lambda a: a.w)
-'''
+```
 #### organize
-'''python
+```python
 	def organize(self):
         while len(self.children) > 2:
             self.sort()
@@ -53,26 +53,26 @@
                 self.children[2:])
         for child in self.children:
             child.organize()
-'''
+```
 ### B - Visualization
 #### Console
-'''python
+```python
 	def disp(self, lvl=0):
         print("--" * lvl + "(" + str(self.w) + ")")
         for child in self.children:
             child.disp(lvl + 1)
-'''
+```
 #### Tkinter
-'''python
+```python
 	def __len__(self):
         return max([1 + len(child) for child in self.children])
 	
 	def getSize(self):
         return sum([child.getSize() for child in self.children])
-'''
+```
 ### C - Compression functions
 #### Index
-'''python
+```python
 	def getIndex(self):
         d0 = self.children[0].getIndex()
         for k in d0.keys():
@@ -85,18 +85,18 @@
         d0.update(d1)
 
         return d0
-'''
+```
 #### getValue
-'''python
+```python
 	def getValue(self, address, length=0):
         if address != '':
             return self.children[int(str(address[0]))].getValue(address[1:],
                                                                 length + 1)
         else:
             return ('', 0)
-'''
+```
 #### Parsing and str builder
-'''python
+```python
 	def __str__(self):
         dic = self.getIndex()
         # number of bits to code the max depth
@@ -106,8 +106,8 @@
             add = dic.get(k, "")
             s += ('{0:0' + str(m) + 'b}').format(len(add)) + add
         return s
-'''
-'''python
+```
+```python
 	def __init__(self, arg1=[]):
         self.parent = None
         self.isLeaf = False
@@ -139,4 +139,4 @@
         else:
             self.setChildren(arg1)
             self.setW()
-'''
+```
