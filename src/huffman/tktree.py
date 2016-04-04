@@ -1,6 +1,7 @@
 import tkinter as tk
 from tree import tree
 
+
 class tktree:
 
     def __init__(self, title="", font=6, width=30):

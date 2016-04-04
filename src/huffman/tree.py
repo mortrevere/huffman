@@ -80,6 +80,7 @@ class tree:
             self.setChildren(
                 [tree([self.children[0], self.children[1]])] +
                 self.children[2:])
+            self.sort()
             win.show(root, time)
 
     def getIndex(self):
