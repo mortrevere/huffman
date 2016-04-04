@@ -2,6 +2,10 @@ from tree import *
 from leaf import *
 import time
 
+def rightPad(string):
+    while len(string)%8 != 0:
+        string += '0'
+    return string
 
 class codec:
     """
@@ -60,9 +64,9 @@ class codec:
 
         addr = self.t.getIndex()
 
-        self.buf = ''.join([addr[c] for c in self.buf])
+        self.buf = rightPad(''.join([addr[c] for c in self.buf]))
         self.buf = [self.buf[i:i + 8] for i in range(0, len(self.buf), 8)]
-        self.buf[-1] += '0' * (8 - len(self.buf[-1]))
+        #self.buf[-1] += '0' * (8 - len(self.buf[-1]))
         self.buf = [int(c, 2) for c in self.buf]  # bytes to char
 
         self.stats['outLen'] = len(self.buf)
@@ -78,11 +82,13 @@ class codec:
         #self.header = ''.join(['{0:08b}'.format(c) for c in self.header])[0:self.treeLen]
 
         self.t = tree(self.header)
+        longestPath = len(self.t)
+        print()
+        print(longestPath)
         self.buf = ''.join(['{0:08b}'.format(c) for c in self.buf])
         self.buf = self.buf[len(self.header)+16+24:]
-
         while self.bodyLen > 0:
-            tmp = self.t.getValue(self.buf)
+            tmp = self.t.getValue(self.buf[0:longestPath])
             out.append(tmp[0])
             self.buf = self.buf[tmp[1]:]
             self.bodyLen -= 1
@@ -90,7 +96,7 @@ class codec:
         self.buf = out
         self.stats['outLen'] = len(self.buf)
         self.stats['processTime'] = time.clock() - t1
-
+        #print(self.buf)
         return self.buf
 
     def write(self, path, enc = False):
@@ -102,9 +108,7 @@ class codec:
             header += tree
             header += '0'*(26-len(bin(self.stats['sourceLen']))) + bin(self.stats['sourceLen'])[2:]
 
-            self.buf = header + ''.join(['{0:08b}'.format(c) for c in self.buf])
-            while len(self.buf)%8 != 0:
-                self.buf += '0'
+            self.buf = rightPad(header + ''.join(['{0:08b}'.format(c) for c in self.buf]))
             self.buf = [int(self.buf[i:i + 8],2) for i in range(0, len(self.buf), 8)]
 
         with open(path, 'wb') as f:

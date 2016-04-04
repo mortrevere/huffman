@@ -1,7 +1,7 @@
 #! /usr/bin/python3.4
 import random as r
 
-for k in range(1, 32):
+for k in range(2, 20):
     name = "in/rand" + str(k) + ".txt"
     print("generating " + name + " weight:" + str(2**k) + " ...")
     with open(name, mode="wb") as f:

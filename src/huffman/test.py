@@ -29,21 +29,22 @@ for file in files:
     io.write(tmp,1)
     print(io.stats['compressionRate'])
     io.close()
-
-    '''io.load(tmp)
+    
+    io.load(tmp)
     io.decode()
     #print("Decompressed in : {}ms".format(io.stats['processTime'] * 1000))
     io.write(out)
     io.close()
     hOut = sha1(out)
-    '''
-    hOut = hIn
+    
+    #hOut = hIn
     #print('Self-test result : ', end='')
     if hIn == hOut:
         pass
         #print('ok')
     else:
         print('fail.')
+        break
         #print('fail. \n\nDetails : ')
         if len(source) != len(out):
             delta = len(source) - len(out)
