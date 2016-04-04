@@ -96,6 +96,10 @@ class tree:
 
         return d0
 
+    def getReverseIndex(self):
+        ind = self.getIndex()
+        return {ind[k]: k for k in ind.keys()}
+
     def getValue(self, address, length=0):
         if address != '':
             return self.children[int(str(address[0]))].getValue(address[1:],
@@ -103,12 +107,13 @@ class tree:
         else:
             return ('', 0)
 
-    def getValue2(self, address, k=0, length=0):
-        if address != '':
-            return self.children[int(str(address[k]))].getValue2(address, k + 1,
-                                                                length + 1)
-        else:
-            return ('', 0)
+    def getValue2(self, add, reverse):
+        k = 1
+        v = None
+        while v is None:
+            v = reverse.get(add[:k], None)
+            k += 1
+        return v
 
     def __len__(self):
         return max([1 + len(child) for child in self.children])
