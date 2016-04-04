@@ -1,7 +1,10 @@
 # Huffman Tree
 ## I - Theory
-### A - Description
-### B - Basic technique
+### A - Definition
+A huffman tree is composed of nodes and leaves. Each possesses a weight that help sorting them. The heavier a node or a leaf is, the closer to the root it is. If the leaf weight represent a letter frequency, it means that a frequent letter have a short path in the tree and getting to it cost less data.
+![alt text][example1]
+Here we create a tree from the sentence "this is a short example".
+### B - Basic technique of creation
 ### C - Compression/Decompression
 ### D - Canonical Huffman
 ## II - Python Implementation
@@ -140,3 +143,5 @@
             self.setChildren(arg1)
             self.setW()
 ```
+
+[example1]: https://github.com/mortrevere/huffman/raw/master/doc/img/exampletree.png "An example with \"this is a short example\"
