@@ -73,8 +73,15 @@ class tree:
             self.setChildren(
                 [tree([self.children[0], self.children[1]])] +
                 self.children[2:])
-        for child in self.children:
-            child.organize()
+
+    def dynorg(self, win, time, root):
+        while len(self.children) > 2:
+            self.sort()
+            self.setChildren(
+                [tree([self.children[0], self.children[1]])] +
+                self.children[2:])
+            self.sort()
+            win.show(root, time)
 
     def getIndex(self):
         d0 = self.children[0].getIndex()
