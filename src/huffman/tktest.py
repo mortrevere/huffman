@@ -15,5 +15,5 @@ for c in dick.keys():
     t.addChild(leaf(c, dick[c]))
 
 win.show(t)
-t.organize()
+t.dynorg(win, 500, t)
 win.show(t)
