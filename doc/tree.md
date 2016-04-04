@@ -15,6 +15,7 @@ We start from a text, (in every example, we're going to use "this is a short exa
 Here we can see this technique in action on our example. 
 ### C - Compression/Decompression
 The generated tree can be resumed into an index : each letter as a equivalent binary path.
+
 Letter | Path
 :---: | :---:
 s | 000
@@ -23,6 +24,7 @@ t | 0011
 r | 01000
 x | 01001
 ... | ...
+
 As we can see here, the binary path is less than an octet witch means that if we replace the actual character with its binary path, the file contains less bits. 
 In the generated file, we can't read anything without knowing the index, that's why the decompression need the tree or the index to do so. Technically speaking the decompression isn't hard as we just have to do the reverse as compression but the main problem is in the tree. There is several methods to get the tree for decompressing :
 
@@ -33,6 +35,7 @@ The tree is generated before the compression by reading the file. It's transferr
 * Adaptable :
 The tree is known but dynamically modified during the compression. In the decompression the same modifications are done from the same tree so at the same instant the two trees are equals and the translation is correct. The modification of a tree is done by incrementing the occurrence of a letter and updating its leaf position. The compression is minimal at the beginning but become great over time. The main advantage is there is no initialization and no tree to transfer but the real-time modification of the tree takes a lot of resources.
 For this project we will use the semi-adaptable method.
+
 ### D - Canonical Huffman
 The semi-adaptable method rises issues about the format of the tree when it comes to transferring it. We can regenerate the tree from the index every-time so transferring the index is the main goal here. So the index is like several tuple : the letter and path :
 ```
