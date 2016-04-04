@@ -21,6 +21,9 @@ class leaf:
     def getValue(self, address, length):
         return (self.value, length)
 
+    def getValue2(self, address, length):
+        return (self.value, length)
+
     def __len__(self):
         return 1
 
