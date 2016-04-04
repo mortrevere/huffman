@@ -34,7 +34,25 @@ The tree is generated before the compression by reading the file. It's transferr
 The tree is known but dynamically modified during the compression. In the decompression the same modifications are done from the same tree so at the same instant the two trees are equals and the translation is correct. The modification of a tree is done by incrementing the occurrence of a letter and updating its leaf position. The compression is minimal at the beginning but become great over time. The main advantage is there is no initialization and no tree to transfer but the real-time modification of the tree takes a lot of resources.
 For this project we will use the semi-adaptable method.
 ### D - Canonical Huffman
-The semi-adaptable method rises issues about the format of the tree when it comes to transferring it. Keep in mind that we can regenerate the tree from the index every-time so transferring the index is the main goal here.
+The semi-adaptable method rises issues about the format of the tree when it comes to transferring it. We can regenerate the tree from the index every-time so transferring the index is the main goal here. So the index is like several tuple : the letter and path :
+```
+(a,111) (e,100) (h,101) (i,0010) ...
+```
+Keep in mind that for a bigger text, we can imagine every letters represented.
+There is another data on this index, the length of the path :
+```
+(a,3,111) (e,3,100) (h,3,101) (i,4,0010) ...
+```
+The length of the path is exactly what allows compression.
+We will make the letter information implicit by creating a tuple for every letter :
+```
+(a,3,111) (b,0) (c,0) (d,0) (e,3,100) ...
+```
+So now there is no need to represent letters as we know the order of them :
+```
+(3,111) (0) (0) (0) (3,100) ...
+```
+That's the information we will transfer alongside the file to decompress it.
 ## II - Python Implementation
 ### A - Building
 #### __init__
