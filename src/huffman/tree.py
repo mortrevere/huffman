@@ -107,14 +107,6 @@ class tree:
         else:
             return ('', 0)
 
-    def getValue2(self, add, reverse):
-        k = 1
-        v = None
-        while v is None:
-            v = reverse.get(add[:k], None)
-            k += 1
-        return v
-
     def __len__(self):
         return max([1 + len(child) for child in self.children])
 
