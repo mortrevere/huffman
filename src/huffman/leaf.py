@@ -18,10 +18,7 @@ class leaf:
     def getIndex(self):
         return {self.value: ""}
 
-    def getValue(self, address, length):
-        return (self.value, length)
-
-    def getValue2(self, address, k, length):
+    def getValue(self, address, k, length):
         return (self.value, length)
 
     def __len__(self):
