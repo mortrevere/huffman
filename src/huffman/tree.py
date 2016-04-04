@@ -102,6 +102,13 @@ class tree:
                                                                 length + 1)
         else:
             return ('', 0)
+        
+    def getValue2(self, address, k, length=0):
+        if address != '':
+            return self.children[int(str(address[k]))].getValue(address, k+1,
+                                                                length + 1)
+        else:
+            return ('', 0)
 
     def __len__(self):
         return max([1 + len(child) for child in self.children])
