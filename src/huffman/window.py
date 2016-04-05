@@ -102,7 +102,7 @@ class window:
             self.l2.config(font=FONT)
             self.l3.config(font=FONTB)
             self.p2.set(100)
-            self.c.write(self.dst)
+            self.c.write(self.dst, enc=self.comp)
         else:
             self.l3.config(font=FONT)
             self.p3.set(100)
