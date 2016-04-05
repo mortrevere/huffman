@@ -97,7 +97,10 @@ class window:
             self.l1.config(font=FONT)
             self.l2.config(font=FONTB)
             self.p1.set(100)
-            self.c.encode()
+            if self.comp:
+                self.c.encode()
+            else:
+                self.c.decode()
         elif self.state == 2:
             self.l2.config(font=FONT)
             self.l3.config(font=FONTB)
