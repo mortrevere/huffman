@@ -102,7 +102,7 @@ class window:
             self.l2.config(font=FONT)
             self.l3.config(font=FONTB)
             self.p2.set(100)
-            self.c.write(self.dst, enc=self.comp)
+            self.c.write(self.dst)
         else:
             self.l3.config(font=FONT)
             self.p3.set(100)
@@ -131,12 +131,13 @@ class window:
     def open(self):
         self.src = tkf.askopenfilename(title="Choose source file :", initialfile=self.srcv.get(), filetypes=self.srctypes)
         if self.comp:
-            self.dst = self.src.split(".")[0]+(".clh")
+            self.dst = self.src+".clh"
+        else:
+            self.dst = self.src[:-4]
         self.check()
 
     def save(self):
         self.dst = tkf.asksaveasfilename(title="Choose destination file :", initialfile=self.dstv.get(), filetypes=self.dsttypes)
-        self.dstv.set(self.dst.split("/")[-1])
         self.check()
 
     def check(self):
