@@ -129,22 +129,20 @@ class window:
         self = window()
 
     def open(self):
-        tmp = self.src
-        self.src = tkf.askopenfilename(title="Choose source file :", initialfile=self.srcv.get(), filetypes=self.srctypes)
-        if self.src == "":
+        tmp = tkf.askopenfilename(title="Choose source file :", initialfile=self.srcv.get(), filetypes=self.srctypes)
+        if tmp != "":
             self.src = tmp
-        if self.comp:
-            self.dst = self.src+".clh"
-        else:
-            self.dst = self.src[:-4]
-        self.check()
+            if self.comp:
+                self.dst = self.src+".clh"
+            else:
+                self.dst = self.src[:-4]
+            self.check()
 
     def save(self):
-        tmp = self.dst
-        self.dst = tkf.asksaveasfilename(title="Choose destination file :", initialfile=self.dstv.get(), filetypes=self.dsttypes)
-        if self.dst == "":
+        tmp = tkf.asksaveasfilename(title="Choose destination file :", initialfile=self.dstv.get(), filetypes=self.dsttypes)
+        if tmp != "":
             self.dst = tmp
-        self.check()
+            self.check()
 
     def check(self):
         self.srcv.set(self.src.split("/")[-1])
