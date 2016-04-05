@@ -23,6 +23,7 @@ class codec:
 
     def load(self, path, debug = 0):
         t1 = time.clock()
+
         with open(path, "rb") as f:
             seek = 0
             treeLen = 0
@@ -55,18 +56,17 @@ class codec:
         """
         Handle compression
         """
+
         t1 = time.clock()
 
         for c in self.dic.keys():
             self.t.addChild(leaf(c, self.dic[c]))
-
         self.t.organize()
 
         addr = self.t.getIndex()
 
         self.buf = rightPad(''.join([addr[c] for c in self.buf]))
         self.buf = [self.buf[i:i + 8] for i in range(0, len(self.buf), 8)]
-        #self.buf[-1] += '0' * (8 - len(self.buf[-1]))
         self.buf = [int(c, 2) for c in self.buf]  # bytes to char
 
         self.stats['outLen'] = len(self.buf)
@@ -78,25 +78,27 @@ class codec:
         t1 = time.clock()
 
         out = []
-        tmp = [0, 1]
-        #self.header = ''.join(['{0:08b}'.format(c) for c in self.header])[0:self.treeLen]
-
         self.t = tree(self.header)
         longestPath = len(self.t)
-        print()
-        print(longestPath)
+        rI = self.t.getReverseIndex()
+
         self.buf = ''.join(['{0:08b}'.format(c) for c in self.buf])
         self.buf = self.buf[len(self.header)+16+24:]
+
         while self.bodyLen > 0:
-            tmp = self.t.getValue(self.buf[0:longestPath])
-            out.append(tmp[0])
-            self.buf = self.buf[tmp[1]:]
+            for k in range(1,longestPath):
+                tmp = self.buf[0:k]
+                if tmp in rI: #lookup in dict is O(1) ! #2fast4u
+                    out.append(rI[tmp])
+                    self.buf = self.buf[k:]
+                    break
             self.bodyLen -= 1
 
         self.buf = out
+
         self.stats['outLen'] = len(self.buf)
         self.stats['processTime'] = time.clock() - t1
-        #print(self.buf)
+
         return self.buf
 
     def write(self, path, enc = False):

@@ -27,16 +27,18 @@ for file in files:
     io.encode()
     #print("Compressed in : {}ms".format(io.stats['processTime'] * 1000))
     io.write(tmp,1)
-    print(io.stats['compressionRate'])
+    print(io.stats['compressionRate'], ',', end = '', sep='')
+    print(io.stats['processTime']*1000, ',', end = '', sep='')
     io.close()
-    
+
     io.load(tmp)
     io.decode()
+    print(io.stats['processTime']*1000)
     #print("Decompressed in : {}ms".format(io.stats['processTime'] * 1000))
     io.write(out)
     io.close()
     hOut = sha1(out)
-    
+
     #hOut = hIn
     #print('Self-test result : ', end='')
     if hIn == hOut:
