@@ -1,9 +1,11 @@
 try:
     from .leaf import leaf
     from .tree import tree
+
 except SystemError:
     from leaf import leaf
     from tree import tree
+
 import time
 
 def rightPad(string):
@@ -21,6 +23,7 @@ class codec:
         self.dic = {}
         self.buf = []
         self.header = []
+        self.isCompressed = False
         self.stats = {
             'sourceLen': 0, 'outLen': 0, 'processTime': 0, 'loadingTime': 0, 'compressionRate' : 0}
 
@@ -79,6 +82,7 @@ class codec:
 
         self.stats['outLen'] = len(self.buf)
         self.stats['processTime'] = round(time.clock() - t1, 6)
+        self.isCompressed = True
 
         return self.buf
 
@@ -109,9 +113,9 @@ class codec:
 
         return self.buf
 
-    def write(self, path, enc = False):
+    def write(self, path):
         t1 = time.clock()
-        if enc:
+        if self.isCompressed:
             tree = str(self.t)
             header = tree
             header = '0'*(18-len(bin(len(header)))) + bin(len(header))[2:]
@@ -135,6 +139,7 @@ class codec:
         self.header = []
         self.bodyLen = 0
         self.treeLen = 0
+        self.isCompressed = False
 
         self.stats = {
             'sourceLen': 0, 'outLen': 0, 'processTime': 0, 'loadingTime': 0, 'compressionRate' : 0}

@@ -37,7 +37,7 @@ for file in files:
     #print("Compressed in : {}ms".format(io.stats['processTime'] * 1000))
 
     print(io.stats['processTime']*1000, ',', end = '', sep='')
-    io.write(tmp,1)
+    io.write(tmp)
     print(io.stats['compressionRate'], ',', end = '', sep='')
     io.close()
 
