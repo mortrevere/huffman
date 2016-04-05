@@ -1,5 +1,4 @@
 import tkinter as tk
-from tree import tree
 
 
 class tktree:

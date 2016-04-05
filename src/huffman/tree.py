@@ -1,4 +1,19 @@
-import leaf
+from . import leaf
+
+
+def getReverseIndex(arg1):
+    p = arg1[4:]
+    n1 = int(arg1[:4], 2)
+    k = 0
+    dic = {}  # We recreate the reverse index from addresses
+    while k < 256:
+        n2 = int(p[:n1], 2)  # nb of bits to code the add
+        add = p[n1:n1 + n2]
+        if add != "":
+            dic[p[n1:n1 + n2]] = k  # reverse index
+        p = p[n1 + n2:]
+        k += 1
+    return dic
 
 
 class tree:
@@ -12,18 +27,7 @@ class tree:
         self.isLeaf = False
         self.children = []
         if isinstance(arg1, str):
-            p = arg1[4:]
-            n1 = int(arg1[:4], 2)
-            k = 0
-            dic = {}  # We recreate the reverse index from addresses
-            while k < 256:
-                n2 = int(p[:n1], 2)  # nb of bits to code the add
-                add = p[n1:n1 + n2]
-                if add != "":
-                    dic[p[n1:n1 + n2]] = k  # reverse index
-                p = p[n1 + n2:]
-                k += 1
-            arg1 = dic
+            arg1 = getReverseIndex(arg1)
         if isinstance(arg1, dict):
             if arg1.get("0", None) is not None:
                 self.addChild(leaf.leaf(arg1["0"]))
