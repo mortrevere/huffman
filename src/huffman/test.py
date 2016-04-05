@@ -1,9 +1,15 @@
 #!/usr/bin/python3.4
 
-from codec import *
+from codec import codec
 from os import listdir
 from os.path import isfile, join
 import sys
+
+def merge(*dict_args):
+    result = {}
+    for dictionary in dict_args:
+        result.update(dictionary)
+    return result
 
 def sha1(filepath):
     import hashlib
@@ -11,6 +17,8 @@ def sha1(filepath):
         return hashlib.sha1(f.read()).hexdigest()
 
 files = [f for f in listdir('tests/in/') if isfile(join('tests/in/', f))]
+
+f = {}
 
 for file in files:
     path = 'tests/in/' + file
@@ -20,15 +28,17 @@ for file in files:
     io = codec()
     hIn = sha1(path)
     io.load(path)
+    f = merge(f, io.dic)
     #print("Loaded in : {}ms".format(io.stats['loadingTime'] * 1000))
     print(io.stats['sourceLen'], ', ', end='', sep='')
     sys.stdout.flush()
 
     io.encode()
     #print("Compressed in : {}ms".format(io.stats['processTime'] * 1000))
+
+    print(io.stats['processTime']*1000, ',', end = '', sep='')
     io.write(tmp,1)
     print(io.stats['compressionRate'], ',', end = '', sep='')
-    print(io.stats['processTime']*1000, ',', end = '', sep='')
     io.close()
 
     io.load(tmp)

@@ -1,5 +1,5 @@
-from tree import *
-from leaf import *
+from tree import tree
+from leaf import leaf
 import time
 
 def rightPad(string):
@@ -17,25 +17,24 @@ class codec:
         self.dic = {}
         self.buf = []
         self.header = []
-
         self.stats = {
             'sourceLen': 0, 'outLen': 0, 'processTime': 0, 'loadingTime': 0, 'compressionRate' : 0}
 
     def load(self, path, debug = 0):
         t1 = time.clock()
+        self.treeLen = 0
+        self.bodyLen = 0
 
         with open(path, "rb") as f:
             seek = 0
-            treeLen = 0
-            bodyLen = 0
+
             byte = f.read(4096)
             while byte:
                 for c in byte:
                     #we build the header even if we are loading an uncompressed file
                     if seek <= 1: #bytes coding tree length if compressed file
-                        treeLen += c * (-255*seek + 256)
-                        self.treeLen = treeLen
-                    if 2 <= seek <= treeLen + 5:
+                        self.treeLen += c * (-255*seek + 256)
+                    if 2 <= seek <= self.treeLen + 5:
                         self.header.append(c)
 
                     self.dic[c] = self.dic.get(c, 0) + 1
@@ -44,7 +43,7 @@ class codec:
                 self.buf += list(byte)
                 byte = f.read(4096)
 
-            self.header = ''.join(['{0:08b}'.format(c) for c in self.header])[0:treeLen+24]
+            self.header = ''.join(['{0:08b}'.format(c) for c in self.header])[0:self.treeLen+24]
             if len(self.header) > 24:
                 self.bodyLen = int(self.header[-24:], 2)
                 self.header = self.header[0:-24]
@@ -63,6 +62,11 @@ class codec:
             self.t.addChild(leaf(c, self.dic[c]))
         self.t.organize()
 
+        '''
+        TODO : size estimation
+        lens = {k : len(self.dic[k]) for k in self.t}
+        outLen = 0
+        '''
         addr = self.t.getIndex()
 
         self.buf = rightPad(''.join([addr[c] for c in self.buf]))
@@ -70,7 +74,7 @@ class codec:
         self.buf = [int(c, 2) for c in self.buf]  # bytes to char
 
         self.stats['outLen'] = len(self.buf)
-        self.stats['processTime'] = time.clock() - t1
+        self.stats['processTime'] = round(time.clock() - t1, 6)
 
         return self.buf
 
@@ -97,7 +101,7 @@ class codec:
         self.buf = out
 
         self.stats['outLen'] = len(self.buf)
-        self.stats['processTime'] = time.clock() - t1
+        self.stats['processTime'] = round(time.clock() - t1, 6)
 
         return self.buf
 
@@ -116,8 +120,8 @@ class codec:
         with open(path, 'wb') as f:
             f.write(bytes(self.buf))
 
-        self.stats['processTime'] = time.clock() - t1
-        self.stats['compressionRate'] = (1 - len(self.buf)/self.stats['sourceLen'])*100
+        self.stats['processTime'] = round(time.clock() - t1, 6)
+        self.stats['compressionRate'] = round((1 - len(self.buf)/self.stats['sourceLen'])*100,2)
 
 
     def close(self):
@@ -129,4 +133,4 @@ class codec:
         self.treeLen = 0
 
         self.stats = {
-            'sourceLen': 0, 'outLen': 0, 'processTime': 0, 'loadingTime': 0}
+            'sourceLen': 0, 'outLen': 0, 'processTime': 0, 'loadingTime': 0, 'compressionRate' : 0}
