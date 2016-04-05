@@ -1,6 +1,6 @@
 import tktree
-from leaf import leaf
-from tree import tree
+from .leaf import leaf
+from .tree import tree
 
 win = tktree.tktree()
 t = tree()
