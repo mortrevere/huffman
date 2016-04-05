@@ -1,4 +1,7 @@
-from . import leaf
+try:
+    from . import leaf
+except SystemError:
+    import leaf
 
 
 def getReverseIndex(arg1):

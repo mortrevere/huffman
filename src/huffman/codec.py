@@ -1,5 +1,9 @@
-from tree import tree
-from leaf import leaf
+try:
+    from .leaf import leaf
+    from .tree import tree
+except SystemError:
+    from leaf import leaf
+    from tree import tree
 import time
 
 def rightPad(string):
