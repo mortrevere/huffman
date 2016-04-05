@@ -129,7 +129,10 @@ class window:
         self = window()
 
     def open(self):
+        tmp = self.src
         self.src = tkf.askopenfilename(title="Choose source file :", initialfile=self.srcv.get(), filetypes=self.srctypes)
+        if self.src == "":
+            self.src = tmp
         if self.comp:
             self.dst = self.src+".clh"
         else:
@@ -137,7 +140,10 @@ class window:
         self.check()
 
     def save(self):
+        tmp = self.dst
         self.dst = tkf.asksaveasfilename(title="Choose destination file :", initialfile=self.dstv.get(), filetypes=self.dsttypes)
+        if self.dst == "":
+            self.dst = tmp
         self.check()
 
     def check(self):
