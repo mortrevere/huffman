@@ -23,7 +23,7 @@ def compress(src, dest):
     print("Source file encoded in {.2f} ms".format(
         c.stats['processTime'] * 1000))
     print("Writing destination file...")
-    c.write(dest, enc=True)
+    c.write(dest)
     print("Destination file written in {.2f} ms".format(
         c.stats['processTime'] * 1000))
     print("Compression successful !")
@@ -41,7 +41,7 @@ def decompress(src, dest):
     print("Source file decoded in {.2f} ms".format(
         c.stats['processTime'] * 1000))
     print("Writing destination file...")
-    c.write(dest, enc=True)
+    c.write(dest)
     print("Destination file written in {.2f} ms".format(
         c.stats['processTime'] * 1000))
     print("Uncompression successful !")
