@@ -7,23 +7,43 @@ except SystemError:
     from tree import tree
 
 import time
+import os
 
 def rightPad(string):
     while len(string)%8 != 0:
         string += '0'
     return string
 
+class progress:
+
+    def __init__(self, var):
+        self.var = var
+        self.max = 0
+        self.current = 0
+
+    def tick(self):
+        self.current += 1;
+        #trying to avoid perf issues by updating tkVars at too HF
+        tmp = round(self.current*100/self.max)
+        if tmp != self.var:
+            self.var = tmp
+
+    def reset(self):
+        self.max = 0
+        self.current = 0
+
 class codec:
     """
     Encoder/decoder for huffman compression
     """
 
-    def __init__(self):
+    def __init__(self, progressVar = None):
         self.t = tree()
         self.dic = {}
         self.buf = []
         self.header = []
         self.isCompressed = False
+        self.progress = progress(progressVar)
         self.stats = {
             'sourceLen': 0, 'outLen': 0, 'processTime': 0, 'loadingTime': 0, 'compressionRate' : 0}
 
@@ -31,6 +51,8 @@ class codec:
         t1 = time.clock()
         self.treeLen = 0
         self.bodyLen = 0
+
+        self.progress.max = os.path.getsize(path)
 
         with open(path, "rb") as f:
             seek = 0
@@ -46,6 +68,7 @@ class codec:
 
                     self.dic[c] = self.dic.get(c, 0) + 1
                     seek += 1
+                    self.progress.tick()
 
                 self.buf += list(byte)
                 byte = f.read(4096)
@@ -57,6 +80,7 @@ class codec:
 
         self.stats['sourceLen'] = len(self.buf)
         self.stats['loadingTime'] = time.clock() - t1
+        self.progress.reset()
 
     def encode(self):
         """
@@ -65,9 +89,14 @@ class codec:
 
         t1 = time.clock()
 
+        self.progress.max = len(self.dic.keys())
+
         for c in self.dic.keys():
             self.t.addChild(leaf(c, self.dic[c]))
+            self.progress.tick()
         self.t.organize()
+
+        self.progress.reset()
 
         '''
         TODO : size estimation
@@ -97,6 +126,8 @@ class codec:
         self.buf = ''.join(['{0:08b}'.format(c) for c in self.buf])
         self.buf = self.buf[len(self.header)+16+24:]
 
+        self.progress.max = self.bodyLen
+
         while self.bodyLen > 0:
             for k in range(1,longestPath):
                 tmp = self.buf[0:k]
@@ -105,8 +136,10 @@ class codec:
                     self.buf = self.buf[k:]
                     break
             self.bodyLen -= 1
+            self.progress.tick()
 
         self.buf = out
+        self.progress.reset()
 
         self.stats['outLen'] = len(self.buf)
         self.stats['processTime'] = round(time.clock() - t1, 6)
@@ -140,6 +173,5 @@ class codec:
         self.bodyLen = 0
         self.treeLen = 0
         self.isCompressed = False
-
         self.stats = {
             'sourceLen': 0, 'outLen': 0, 'processTime': 0, 'loadingTime': 0, 'compressionRate' : 0}
