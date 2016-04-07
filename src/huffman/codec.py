@@ -25,8 +25,8 @@ class progress:
         self.current += 1;
         #trying to avoid perf issues by updating tkVars at too HF
         tmp = round(self.current*100/self.max)
-        if tmp != self.var:
-            self.var = tmp
+        if tmp != self.var.get():
+            self.var.set(tmp)
 
     def reset(self):
         self.max = 0

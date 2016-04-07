@@ -9,6 +9,7 @@ except SystemError:
 import tkinter as tk
 import tkinter.filedialog as tkf
 import tkinter.ttk as ttk
+import time
 
 FONT = ("Helvetica", 10)
 FONTB = ("Helvetica", 10, "bold")
@@ -16,7 +17,7 @@ FONTB = ("Helvetica", 10, "bold")
 
 class window:
     def __init__(self):
-        self.c = codec.codec()
+    
 
         self.win = tk.Tk()
         self.win.title("Huffman")
@@ -31,13 +32,16 @@ class window:
         self.launch = False
         self.source = ""
         self.state = 0
-        self.p1 = tk.IntVar(0)
-        self.p2 = tk.IntVar(0)
-        self.p3 = tk.IntVar(0)
-
+        self.prog = tk.IntVar(0)
+        self.prog.trace('w', self.refresh)
+        self.end = tk.IntVar()
+        self.end.set(100)
+        self.c = codec.codec(self.prog)
         self.win1()
-
         self.win.mainloop()
+
+    def refresh(self, *args):
+        self.win.update()
 
     def changemode(self):
         self.srctypes, self.dsttypes = self.dsttypes, self.srctypes
@@ -79,36 +83,42 @@ class window:
         self.bl.config(state=tk.DISABLED)
         self.l1 = tk.Label(self.fr, text="Loading : ", font=FONTB)
         self.l1.grid(row=5, column=0, sticky=tk.E)
-        ttk.Progressbar(self.fr, variable=self.p1, length=200).grid(row=5, column=1, columnspan=2)
+        self.p1 = ttk.Progressbar(self.fr, length=200)
+        self.p1.grid(row=5, column=1, columnspan=2)
         self.l2 = tk.Label(self.fr, text="Decoding : ", font=FONT)
         if self.comp:
             self.l2.config(text="Encoding : ")
         self.l2.grid(row=6, column=0, sticky=tk.E)
-        ttk.Progressbar(self.fr, variable=self.p2, length=200).grid(row=6, column=1, columnspan=2)
+        self.p2 = ttk.Progressbar(self.fr, length=200)
+        self.p2.grid(row=6, column=1, columnspan=2)
         self.l3 = tk.Label(self.fr, text="Writing : ", font=FONT)
         self.l3.grid(row=7, column=0, sticky=tk.E)
-        ttk.Progressbar(self.fr, variable=self.p3, length=200).grid(row=7, column=1, columnspan=2)
+        self.p3 = ttk.Progressbar(self.fr, length=200)
+        self.p3.grid(row=7, column=1, columnspan=2)
 
     def process(self):
         if self.state == 0:
             self.win2()
-            self.c.load(self.src)
+            self.p1.config(variable=self.prog)
         elif self.state == 1:
+            self.c.load(self.src)
             self.l1.config(font=FONT)
             self.l2.config(font=FONTB)
-            self.p1.set(100)
+            self.p2.config(variable=self.prog)
+            self.p1.config(variable=self.end)
+        elif self.state == 2:
             if self.comp:
                 self.c.encode()
             else:
                 self.c.decode()
-        elif self.state == 2:
             self.l2.config(font=FONT)
             self.l3.config(font=FONTB)
-            self.p2.set(100)
+            self.p3.config(variable=self.prog)
+            self.p2.config(variable=self.end)
+        elif self.state == 3:
             self.c.write(self.dst)
-        else:
             self.l3.config(font=FONT)
-            self.p3.set(100)
+        else:
             if self.comp:
                 tk.Label(self.fr, text="Compression successful", font=FONTB).grid(row=8, column=0, columnspan=4)
                 tk.Label(self.fr, text="Compression rate : {}%".format(self.c.stats['compressionRate']), font=FONT).grid(row=9, column=0, columnspan=2)
