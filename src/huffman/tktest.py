@@ -7,7 +7,7 @@ except SystemError:
     from tree import tree
 
 
-win = tktree.tktree()
+win = tktree.tktree(double=True)
 t = tree()
 dick = {}
 
@@ -19,6 +19,7 @@ with open("tests/short.txt") as f:
 for c in dick.keys():
     t.addChild(leaf(c, dick[c]))
 
-win.show(t)
-t.dynorg(win, 1000, t)
+#win.show(t)
+#t.dynorg(win, 1000, t)
+t.organize()
 win.show(t)

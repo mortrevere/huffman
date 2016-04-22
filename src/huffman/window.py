@@ -135,7 +135,7 @@ class window:
             t = self.c.t
         else:
             t = tree(self.c.header)
-        tktree("clic to quit").show(t)
+        tktree("clic to quit", spacey=0, double = True).show(t)
 
     def reset(self):
         self.win.destroy()
