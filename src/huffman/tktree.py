@@ -36,7 +36,7 @@ class tktree:
             w = w2 * ((1 + self.spacex) * l + self.spacex)
             h = h2 * ((1 + self.spacey) * s + self.spacey)
             self.cv.config(width=w, height=h)
-            genTreeH(self.cv, True, self.spacex, w2, h2, self.height, w2 * self.spacex,
+            genTreeH(self.cv, False, self.spacex, w2, h2, self.height, w2 * self.spacex,
                      self.spacey * h2 + h / 2, h, t)
         else:
             s = max(t.children[0].getSize(), t.children[1].getSize())
