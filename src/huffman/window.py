@@ -2,10 +2,12 @@ try:
     from . import codec
     from .tktree import tktree
     from .tree import tree
+    from .entro import getEntropy
 except SystemError:
     import codec
     from tktree import tktree
     from tree import tree
+    from entro import getEntropy
 import tkinter as tk
 import tkinter.filedialog as tkf
 import tkinter.messagebox as tkm
@@ -36,6 +38,7 @@ class window:
         self.dstv = tk.StringVar()
         self.stv = tk.BooleanVar()
         self.stv.set(True)
+        self.stv.trace('w', self.stats)
         self.src = ""
         self.dst = ""
         self.srctypes = [('all files', '.*')]
@@ -88,7 +91,8 @@ class window:
             row=2, column=1, columnspan=2)
         self.bd = tk.Button(self.fr, text=" ... ", command=self.save)
         self.bd.grid(row=2, column=3, sticky=tk.W)
-        tk.Checkbutton(self.fr, text="show statistics", variable=self.stv).grid(row=4, column=0, columnspan=2)
+        self.cb = tk.Checkbutton(self.fr, text="show statistics", variable=self.stv)
+        self.cb.grid(row=4, column=0, columnspan=2)
         self.bl = tk.Button(self.fr, text="Launch", font=FONT,
                             width=20, state=tk.DISABLED, command=self.process)
         self.bl.grid(row=4, column=2, columnspan=2)
@@ -100,6 +104,7 @@ class window:
         self.bd.config(state=tk.DISABLED)
         self.bm.config(state=tk.DISABLED)
         self.bl.config(state=tk.DISABLED)
+        self.cb.config(state=tk.DISABLED)
         self.l1 = tk.Label(self.fr, text="Loading : ", font=FONTB)
         self.l1.grid(row=5, column=0, sticky=tk.E)
         self.p1 = ttk.Progressbar(self.fr, length=200)
@@ -125,9 +130,8 @@ class window:
             self.l2.config(font=FONTB)
             self.p2.config(variable=self.prog)
             self.p1.config(variable=self.end)
-            if self.comp and self.stv.get():
-                tk.Label(self.fr, text="Source size : {}    Loading time : {} s".format(getSize(self.c.stats['sourceLen']),round(self.c.stats['loadingTime'],2)), font=FONT).grid(row=6, column=0, columnspan=4)
-                tk.Label(self.fr, text="Est. size : {}    Type entropy : {}".format(getSize(self.c.stats['preOutLen']),round(self.c.stats['typeEntropy'],2)), font=FONT).grid(row=7, column=0, columnspan=4)
+            if self.stv.get():
+                tk.Label(self.fr, text="{} s".format(round(self.c.stats['processTime'],2)), font=FONT).grid(row=5, column=3)
         elif self.state == 2:
             if self.comp:
                 self.c.encode()
@@ -137,9 +141,13 @@ class window:
             self.l3.config(font=FONTB)
             self.p3.config(variable=self.prog)
             self.p2.config(variable=self.end)
+            if self.stv.get():
+                tk.Label(self.fr, text="{} s".format(round(self.c.stats['processTime'],2)), font=FONT).grid(row=8, column=3)
         elif self.state == 3:
             self.c.write(self.dst)
             self.l3.config(font=FONT)
+            if self.stv.get():
+                tk.Label(self.fr, text="{} s".format(round(self.c.stats['processTime'],2)), font=FONT).grid(row=9, column=3)
         else:
             if self.comp:
                 tk.Label(self.fr, text="Compression successful", font=FONTB).grid(
@@ -162,11 +170,20 @@ class window:
             t = self.c.t
         else:
             t = tree(self.c.header)
-        tktree("clic to quit", spacey=0, double=False).show(t)
+        tktree("clic to quit", spacey=0, double=True).show(t)
 
     def reset(self):
         self.win.destroy()
         self = window()
+
+    def stats(self, *args):
+        self.bl.config(text="Launch")
+        if self.stv.get() and self.comp and self.src != "":
+            ext = self.src.split(".")[-1]
+            ent = getEntropy(ext)
+            pre = os.path.getsize(self.src)*(ent+min(ent+1,8))/16
+            if pre != 0:
+                self.bl.config(text="Launch (Est : "+getSize(pre)+")")
 
     def open(self):
         tmp = tkf.askopenfilename(
@@ -194,11 +211,13 @@ class window:
                 tkm.showerror("Size error", "Source file must be less than "+getSize(2**24))
                 self.srcl.config(fg="red")
             else:
-                self.bl.config(state=tk.NORMAL, text="Launch")
+                self.bl.config(state=tk.NORMAL)
                 self.srcl.config(fg=self.bl['fg'])
+                self.stats()
         else:
-            self.bl.config(state=tk.DISABLED, text="Launch")
+            self.bl.config(state=tk.DISABLED)
             self.srcl.config(fg=self.bl['fg'])
+            self.stats()
 
 
 if __name__ == "__main__":
