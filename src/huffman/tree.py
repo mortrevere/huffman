@@ -19,6 +19,13 @@ def getReverseIndex(arg1):
     return dic
 
 
+def getASCIIIndex():
+    dic = {}
+    for k in range(256):
+        dic[chr(k)] = "{:0>8}".format(bin(k)[2:])
+    return dic
+
+
 class tree:
     """
     The huffman tree itself.
@@ -93,13 +100,10 @@ class tree:
         d0 = self.children[0].getIndex()
         for k in d0.keys():
             d0[k] = "0" + d0[k]
-
         d1 = self.children[1].getIndex()
         for k in d1.keys():
             d1[k] = "1" + d1[k]
-
         d0.update(d1)
-
         return d0
 
     def getReverseIndex(self):
@@ -113,6 +117,9 @@ class tree:
                                                                 length + 1)
         else:
             return ('', 0)
+
+    def getAddress(self, value):
+        return ""
 
     def __len__(self):
         return max([1 + len(child) for child in self.children])
