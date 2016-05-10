@@ -2,7 +2,7 @@ FILE = "entropy_data.dat"
 
 
 def learnEntropy(datatype, entropy):
-    if datatype == "":
+    if datatype == "" or " " in datatype:
         return
     data = loadData()
     d = data.get(datatype,(0, 0))
