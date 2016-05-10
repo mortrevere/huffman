@@ -12,7 +12,9 @@ def learnEntropy(datatype, entropy):
 
 
 def getEntropy(datatype):
-    return loadData()[datatype][0]
+    if datatype == "":
+        return 0
+    return loadData().get(datatype,(0,0))[0]
 
 
 def loadData():
