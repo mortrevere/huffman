@@ -29,6 +29,10 @@ class progress:
         if tmp != self.var.get():
             self.var.set(tmp)
 
+    def jump(self, n):
+        self.current += n;
+        self.var.set(round(self.current*100/self.max))
+
     def reset(self):
         self.max = 0
         self.current = 0
@@ -80,6 +84,7 @@ class codec:
                 self.header = self.header[0:-24]
 
         self.stats['processTime'] = time.clock() - t1
+        self.stats['loadingTime'] = time.clock() - t1
         self.stats['sourceLen'] = len(self.buf)
         p = [self.dic[k]/self.stats['sourceLen'] for k in self.dic.keys()]
         self.stats['typeEntropy'] = - sum([pi*log2(pi) for pi in p])
@@ -152,19 +157,25 @@ class codec:
 
     def write(self, path):
         t1 = time.clock()
+        self.progress.max = len(self.buf)
+
         if self.isCompressed:
+            self.progress.max *= 3
             tree = str(self.t)
             header = tree
             header = '0'*(18-len(bin(len(header)))) + bin(len(header))[2:]
             header += tree
             header += '0'*(26-len(bin(self.stats['sourceLen']))) + bin(self.stats['sourceLen'])[2:]
-
             self.buf = rightPad(header + ''.join(['{0:08b}'.format(c) for c in self.buf]))
+            self.progress.jump(self.progress.max*1/3)
             self.buf = [int(self.buf[i:i + 8],2) for i in range(0, len(self.buf), 8)]
+            self.progress.jump(self.progress.max*1/3)
 
         with open(path, 'wb') as f:
             f.write(bytes(self.buf))
 
+        self.progress.current = self.progress.max - 1
+        self.progress.tick()
         self.stats['processTime'] = round(time.clock() - t1, 6)
         self.stats['compressionRate'] = round((1 - len(self.buf)/self.stats['sourceLen'])*100,2)
 
