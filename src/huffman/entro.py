@@ -27,4 +27,4 @@ def loadData():
 def saveData(data):
     with open(FILE, "w") as f:
         for t in data.keys():
-            f.write("{} {} {}".format(t, data[t][0], data[t][1]))
+            f.write("{} {} {}\n".format(t, data[t][0], data[t][1]))
