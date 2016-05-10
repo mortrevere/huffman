@@ -1,5 +1,8 @@
 import tkinter as tk
-
+try:
+    from . import leaf
+except SystemError:
+    import leaf
 
 class tktree:
 
@@ -76,7 +79,7 @@ def genTreeH(cv, rev, spcx, w2, h2, fh, x0, y0, dy, t):
 
 def rect(cv, rev, w2, h2, fh, x0, y0, dy, t):
     color = "white"
-    if t.isLeaf:
+    if isinstance(t, leaf.leaf):
         color = "yellow"
     if rev:
         x0 -= w2

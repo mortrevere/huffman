@@ -7,7 +7,6 @@ class leaf:
         self.value = value
         self.w = w
         self.parent = None
-        self.isLeaf = True
 
     def disp(self, lvl=0):
         print("--" * lvl + "({}, {})".format(self.value, self.w))

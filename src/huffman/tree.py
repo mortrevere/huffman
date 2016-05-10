@@ -27,7 +27,6 @@ class tree:
 
     def __init__(self, arg1=[]):
         self.parent = None
-        self.isLeaf = False
         self.children = []
         if isinstance(arg1, str):
             arg1 = getReverseIndex(arg1)
