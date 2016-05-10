@@ -175,8 +175,8 @@ class window:
     def reset(self):
         self.win.destroy()
         self = window()
-        
-    def stats(self):
+
+    def stats(self, *args):
         self.bl.config(text="Launch")
         if self.stv.get() and self.comp and self.src != "":
             ext = self.src.split(".")[-1]
