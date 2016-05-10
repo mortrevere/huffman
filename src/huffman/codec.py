@@ -46,7 +46,7 @@ class codec:
         self.isCompressed = False
         self.progress = progress(progressVar)
         self.stats = {
-            'sourceLen': 0, 'outLen': 0, 'processTime': 0,'preOutLen' : 0,'typeEntropy' : 0 , 'loadingTime': 0, 'compressionRate' : 0}
+            'sourceLen': 0, 'outLen': 0, 'processTime': 0,'preOutLen' : 0,'typeEntropy' : 0, 'compressionRate' : 0}
 
     def load(self, path, debug = 0):
         t1 = time.clock()
@@ -79,7 +79,7 @@ class codec:
                 self.bodyLen = int(self.header[-24:], 2)
                 self.header = self.header[0:-24]
 
-        self.stats['loadingTime'] = time.clock() - t1
+        self.stats['processTime'] = time.clock() - t1
         self.stats['sourceLen'] = len(self.buf)
         p = [self.dic[k]/self.stats['sourceLen'] for k in self.dic.keys()]
         self.stats['typeEntropy'] = - sum([pi*log2(pi) for pi in p])
