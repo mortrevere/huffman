@@ -61,7 +61,7 @@ def genTreeH(cv, rev, spcx, w2, h2, fh, x0, y0, dy, t):
     rect(cv, rev, w2, h2, fh, x0, y0, dy, t)
     st = t.getSize()
     dy0 = y0 - dy / 2
-    if not t.isLeaf:
+    if not isinstance(t, leaf.leaf):
         for child in t.children:
             hc = int(dy * child.getSize() / st)
             if rev:
