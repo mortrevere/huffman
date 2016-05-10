@@ -2,6 +2,8 @@ FILE = "entropy_data.dat"
 
 
 def learnEntropy(datatype, entropy):
+    if datatype == "":
+        return
     data = loadData()
     d = data.get(datatype,(0, 0))
     data[datatype] = (

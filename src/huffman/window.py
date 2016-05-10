@@ -8,6 +8,7 @@ except SystemError:
     from tree import tree
 import tkinter as tk
 import tkinter.filedialog as tkf
+import tkinter.messagebox as tkm
 import tkinter.ttk as ttk
 import time
 import os
@@ -33,6 +34,8 @@ class window:
         self.win.resizable(False, False)
         self.srcv = tk.StringVar()
         self.dstv = tk.StringVar()
+        self.stv = tk.BooleanVar()
+        self.stv.set(True)
         self.src = ""
         self.dst = ""
         self.srctypes = [('all files', '.*')]
@@ -85,10 +88,10 @@ class window:
             row=2, column=1, columnspan=2)
         self.bd = tk.Button(self.fr, text=" ... ", command=self.save)
         self.bd.grid(row=2, column=3, sticky=tk.W)
-
+        tk.Checkbutton(self.fr, text="show statistics", variable=self.stv).grid(row=4, column=0, columnspan=2)
         self.bl = tk.Button(self.fr, text="Launch", font=FONT,
-                            width=35, state=tk.DISABLED, command=self.process)
-        self.bl.grid(row=4, column=0, columnspan=4)
+                            width=20, state=tk.DISABLED, command=self.process)
+        self.bl.grid(row=4, column=2, columnspan=2)
 
         self.fr.pack(padx=5, pady=5)
 
@@ -122,9 +125,9 @@ class window:
             self.l2.config(font=FONTB)
             self.p2.config(variable=self.prog)
             self.p1.config(variable=self.end)
-            if self.comp:
-                tk.Label(self.fr, text="Source size : {}    Loading time : {} s".format(getSize(self.c.stats['sourceLen']),round(self.c.stats['loadingTime'],2)), font=FONT).grid(row=6, column=0, columnspan=2)
-                tk.Label(self.fr, text="Est. size : {}    Type entropy : {}".format(getSize(self.c.stats['preOutLen']),round(self.c.stats['typeEntropy'],2)), font=FONT).grid(row=7, column=0, columnspan=2)
+            if self.comp and self.stv.get():
+                tk.Label(self.fr, text="Source size : {}    Loading time : {} s".format(getSize(self.c.stats['sourceLen']),round(self.c.stats['loadingTime'],2)), font=FONT).grid(row=6, column=0, columnspan=4)
+                tk.Label(self.fr, text="Est. size : {}    Type entropy : {}".format(getSize(self.c.stats['preOutLen']),round(self.c.stats['typeEntropy'],2)), font=FONT).grid(row=7, column=0, columnspan=4)
         elif self.state == 2:
             if self.comp:
                 self.c.encode()
@@ -141,9 +144,10 @@ class window:
             if self.comp:
                 tk.Label(self.fr, text="Compression successful", font=FONTB).grid(
                     row=10, column=0, columnspan=4)
-                tk.Label(self.fr, text="Output size : {}\nSize reduced : {}%".format(getSize(self.c.stats['outLen']), self.c.stats['compressionRate']), font=FONT).grid(row=11, column=0, columnspan=2)
-                tk.Button(self.fr, text="Show tree", command=self.showtree).grid(
-                    row=11, column=2, columnspan=2)
+                if self.stv.get():
+                    tk.Label(self.fr, text="Output size : {}\nSize reduced : {}%".format(getSize(self.c.stats['outLen']), self.c.stats['compressionRate']), font=FONT).grid(row=11, column=0, columnspan=2)
+                    tk.Button(self.fr, text="Show tree", command=self.showtree).grid(
+                        row=11, column=2, columnspan=2)
             else:
                 tk.Label(self.fr, text="Uncompression successful", font=FONTB).grid(
                     row=10, column=0, columnspan=4)
@@ -187,8 +191,7 @@ class window:
         self.dstv.set(self.dst.split("/")[-1])
         if self.src != "" and self.dst != "":
             if os.path.getsize(self.src) >= 2**24:
-                self.bl.config(
-                    state=tk.DISABLED, text="Source file must be less than "+getSize(2**24))
+                tkm.showerror("Size error", "Source file must be less than "+getSize(2**24))
                 self.srcl.config(fg="red")
             else:
                 self.bl.config(state=tk.NORMAL, text="Launch")
