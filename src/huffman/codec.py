@@ -1,10 +1,11 @@
 try:
     from .leaf import leaf
     from .tree import tree
-
+    from .entro import learnEntropy
 except SystemError:
     from leaf import leaf
     from tree import tree
+    from entro import learnEntropy
 
 import time
 import os
@@ -91,9 +92,12 @@ class codec:
         self.stats['processTime'] = time.clock() - t1
         self.stats['loadingTime'] = time.clock() - t1
         self.stats['sourceLen'] = len(self.buf)
-        p = [self.dic[k]/self.stats['sourceLen'] for k in self.dic.keys()]
-        self.stats['typeEntropy'] = - sum([pi*log2(pi) for pi in p])
-        self.stats['preOutLen'] = (self.stats['typeEntropy']+min(self.stats['typeEntropy']+1,8))*self.stats['sourceLen']/16
+        ext = path.split(".")[-1]
+        if ext != "clh":
+            p = [self.dic[k]/self.stats['sourceLen'] for k in self.dic.keys()]
+            self.stats['typeEntropy'] = - sum([pi*log2(pi) for pi in p])
+            learnEntropy(ext, self.stats['typeEntropy'])
+            self.stats['preOutLen'] = (self.stats['typeEntropy']+min(self.stats['typeEntropy']+1,8))*self.stats['sourceLen']/16
         self.progress.reset()
 
     def encode(self):
