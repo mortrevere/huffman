@@ -18,7 +18,7 @@ FONTB = ("Helvetica", 10, "bold")
 
 def getSize(s):
     if s < 10**3:
-        return round(str(s),2) + " o"
+        return str(round(s,2)) + " o"
     if s < 10**6:
         return str(round(s/10**3, 2)) + " Ko"
     if s < 10**9:
