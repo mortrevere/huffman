@@ -1,10 +1,11 @@
 # Huffman
 ## Table of contents
 ### [I - Utilization](#i---utilization)
-#### A - Installation
-#### B - Module command
+#### [A - Installation](#a---installation)
+#### [B - Module command](#b---module-command)
+#### [C - User Interface](#c---user-interface)
 ### [II - Theory](#ii---theory)
-#### A - Huffman tree
+####  [A - Huffman tree](#a---huffman-tree)
 ## I - Utilization
 ### A - Installation
 Download the source folder from github [here](https://github.com/mortrevere/huffman/archive/master.zip). Decompress the archive into desired location and add the src/huffman folder in your Python path. (See how on windows [here](https://docs.python.org/3/using/windows.html#excursus-setting-environment-variables))
