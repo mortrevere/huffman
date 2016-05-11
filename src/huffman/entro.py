@@ -2,6 +2,9 @@ FILE = "entropy_data.dat"
 
 
 def learnEntropy(datatype, entropy):
+    """
+    Save the entropy of the datatype for prediction
+    """
     if datatype == "" or " " in datatype:
         return
     data = loadData()
@@ -12,12 +15,18 @@ def learnEntropy(datatype, entropy):
 
 
 def getEntropy(datatype):
+    """
+    Return the average entropy of the selected datatype if exist
+    """
     if datatype == "":
         return 0
     return loadData().get(datatype,(0,0))[0]
 
 
 def loadData():
+    """
+    Load entropy data from the selected file
+    """
     data = {}
     open(FILE, 'a').close()  # create file if not exist
     with open(FILE, "r") as f:
@@ -29,6 +38,9 @@ def loadData():
 
 
 def saveData(data):
+    """
+    Save entropy data in the selected file
+    """
     with open(FILE, "w") as f:
         for t in data.keys():
             f.write("{} {} {}\n".format(t, data[t][0], data[t][1]))

@@ -5,6 +5,9 @@ except SystemError:
 
 
 def getReverseIndex(arg1):
+    """
+    Transform binary data of the tree into a reversed index path->letter
+    """
     p = arg1[4:]
     n1 = int(arg1[:4], 2)
     k = 0
@@ -20,6 +23,9 @@ def getReverseIndex(arg1):
 
 
 def getASCIIIndex():
+    """
+    Return the tree from the ascii table (binary paths)
+    """
     dic = {}
     for k in range(256):
         dic[chr(k)] = "{:0>8}".format(bin(k)[2:])
@@ -53,11 +59,17 @@ class tree:
             self.setW()
 
     def disp(self, lvl=0):
+        """
+        Display the tree for debug purposes
+        """
         print("--" * lvl + "(" + str(self.w) + ")")
         for child in self.children:
             child.disp(lvl + 1)
 
     def addChild(self, child):
+        """
+        Add the given child in the node
+        """
         child.parent = self
         self.children.append(child)
         self.setW()
@@ -65,22 +77,37 @@ class tree:
             self.parent.setW()
 
     def addChildren(self, children):
+        """
+        Add multiple children in the node
+        """
         for child in children:
             self.addChild(child)
 
     def setChildren(self, children):
+        """
+        Replace all the children
+        """
         self.children = []
         self.addChildren(children)
 
     def setW(self):
+        """
+        Update the weight of the node
+        """
         self.w = 0
         for child in self.children:
             self.w += child.w
 
     def sort(self):
+        """
+        Sort children with their weight
+        """
         self.children = sorted(self.children, key=lambda a: a.w)
 
     def organize(self):
+        """
+        Make the final tree from all leaves into the root
+        """
         while len(self.children) > 2:
             self.sort()
             self.setChildren(
@@ -88,6 +115,9 @@ class tree:
                 self.children[2:])
 
     def dynorg(self, win, time, root):
+        """
+        Same as organize() but with graphic visualization
+        """
         while len(self.children) > 2:
             self.sort()
             self.setChildren(
@@ -97,6 +127,9 @@ class tree:
             win.show(root, time)
 
     def getIndex(self):
+        """
+        Return the index of the tree (letter->path)
+        """
         d0 = self.children[0].getIndex()
         for k in d0.keys():
             d0[k] = "0" + d0[k]
@@ -107,30 +140,39 @@ class tree:
         return d0
 
     def getReverseIndex(self):
+        """
+        Return the revers-index of the tree (path->letter)
+        """
         ind = self.getIndex()
         return {ind[k]: k for k in ind.keys()}
 
-    def getValue(self, address, k=0, length=0):
-        if address != '':
-            return self.children[int(str(address[k]))].getValue(address,
+    def getValue(self, path, k=0, length=0):
+        """
+        Return the value with the given path
+        """
+        if path != '':
+            return self.children[int(str(path[k]))].getValue(path,
                                                                 k + 1,
                                                                 length + 1)
         else:
             return ('', 0)
 
-    def getAddress(self, value):
-        return ""
-
     def __len__(self):
+        """
+        Return the max depht of the tree
+        """
         return max([1 + len(child) for child in self.children])
 
     def getSize(self):
+        """
+        Return the max number of children in all depths
+        """
         return sum([child.getSize() for child in self.children])
 
-    def __repr__(self):
-        return str(self.w)
-
     def __str__(self):
+        """
+        Transform the tree into a binary string for compression
+        """
         dic = self.getIndex()
         # number of bits to code the max depth
         m = len(bin(len(self))) - 2

@@ -12,10 +12,16 @@ import os
 
 
 def win():
+    """
+    Show the compression/decompression UI
+    """
     window()
 
 
 def compress(src, dest):
+    """
+    Compress the selected source into the destination
+    """
     print("Compressing " + src + " to " + dest + " ...")
     ext = src.split(".")[-1]
     ent = getEntropy(ext)
@@ -39,6 +45,9 @@ def compress(src, dest):
 
 
 def decompress(src, dest):
+    """
+    Decompress the selected source into the destination
+    """
     print("Uncompressing " + src + " to " + dest + " ...")
     c = codec.codec()
     print("Loading source file...")
