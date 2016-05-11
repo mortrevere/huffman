@@ -78,7 +78,7 @@ class window:
         if self.comp:
             self.butmode.config(text="Compress")
         else:
-            self.butmode.config(text="Uncompress")
+            self.butmode.config(text="Decompress")
 
     def win1(self):
         """
