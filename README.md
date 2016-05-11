@@ -1,11 +1,11 @@
 # Huffman
 ## Table of contents
-### [I - Utilization](#i---utilization)
-#### [A - Installation](#a---installation)
-#### [B - Module command](#b---module-command)
-#### [C - User Interface](#c---user-interface)
-### [II - Theory](#ii---theory)
-####  [A - Huffman tree](#a---huffman-tree)
+### [I - Utilization](#i---utilization-1)
+#### [A - Installation](#a---installation-1)
+#### [B - Module command](#b---module-command-1)
+#### [C - User Interface](#c---user-interface-1)
+### [II - Theory](#ii---theory-1)
+####  [A - Huffman tree](#a---huffman-tree-1)
 ## I - Utilization
 ### A - Installation
 Download the source folder from github [here](https://github.com/mortrevere/huffman/archive/master.zip). Decompress the archive into desired location and add the src/huffman folder in your Python path. (See how on windows [here](https://docs.python.org/3/using/windows.html#excursus-setting-environment-variables))
@@ -23,16 +23,22 @@ You can display the UI by using the command :
     
 or by launching src/huffman/window.py
 You'll get the following interface :
+
 ![alt text][UI1]
+
 First selected next to mode if you want to compress/decompress.
 Use the "..." button next to "source" to select your source file.
 You'll see an interface like this one :
+
 ![alt text][UI2]
+
 You can also change the destination file with the "..." button next to "destination". 
 If you doesn't see an estimation of the output file it's that the entropy data isn't loaded yet in your computer, it will create automatically along with your compressions. 
 You can new use the "launch" button to launch the compression/decompression
 At the end of the process you'll see :
+
 ![alt text][UI3]
+
 Your file is successfully compressed/decompressed !
 ## II - Theory
 ### A - Huffman Tree
