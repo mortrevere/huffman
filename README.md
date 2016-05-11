@@ -1,20 +1,31 @@
 # Huffman
 ## Table of contents
-## I - Huffman Tree
-### A - Definition
+### [I - Utilization](#i---utilization)
+### [II - Theory](#ii---theory)
+## I - Utilization
+### A - Installation
+Download the source folder from github [here](https://github.com/mortrevere/huffman/archive/master.zip). Decompress the archive into desired location and add the src/huffman folder in your Python path. (See how on windows [here](https://docs.python.org/3/using/windows.html#excursus-setting-environment-variables))
+### B - Module command
+You can now use the huffman compression with the following syntax in a command prompt :
+
+    python -m huffman [source] [destination]
+
+## II - Theory
+### A - Huffman Tree
+#### 1 - Definition
 A tree is a data-structure composed of nodes and leaves. Each leaf is a data and there is a node path to access it. In an Huffman tree, each leaf and node possesses a weight that help organizing the tree. The heavier a node or a leaf is, the closer to the root it is. If the leaf weight represent a letter frequency, it means that a frequent letter have a short path in the tree and getting to it cost less data.
 
 ![alt text][example1]
 
 Here we create a tree from the sentence "this is a short example".
 We can see each node with its weight and each leaf (highlighted) with the letter it represent and its weight/number of occurrences. Each node possesses only two children to create a binary path for future [compression](#c---compressiondecompression).
-### B - Basic technique of creation
+#### 2 - Basic technique of creation
 We start from a text, (in every example, we're going to use "this is a short example" for the simplicity) and we create at the root each leaves. Each leaves is created from a letter and its number of occurrences. Then we can start organizing the tree. First we take the two lighter nodes/leaves of the root and we group them in a single node. We repeat this treatment until there is only two nodes/leaves left
 
 ![alt text][example2]
 
 Here we can see this technique in action on our example. 
-### C - Compression/Decompression
+#### 3 - Compression/Decompression
 The generated tree can be resumed into an index : each letter as a equivalent binary path.
 
 Letter | Path
@@ -37,7 +48,7 @@ The tree is generated before the compression by reading the file. It's transferr
 The tree is known but dynamically modified during the compression. In the decompression the same modifications are done from the same tree so at the same instant the two trees are equals and the translation is correct. The modification of a tree is done by incrementing the occurrence of a letter and updating its leaf position. The compression is minimal at the beginning but become great over time. The main advantage is there is no initialization and no tree to transfer but the real-time modification of the tree takes a lot of resources.
 For this project we will use the semi-adaptable method.
 
-### D - Canonical Huffman
+#### 4 - Canonical Huffman
 The semi-adaptable method rises issues about the format of the tree when it comes to transferring it. We can regenerate the tree from the index every-time so transferring the index is the main goal here. So the index is like several tuple : the letter and path :
 ```
 (a,111) (e,100) (h,101) (i,0010) ...
@@ -61,3 +72,4 @@ That's the information we will transfer alongside the file to decompress it.
 
 [example1]: https://github.com/mortrevere/huffman/raw/master/doc/img/exampletree.png "An example with 'this is a short example'"
 [example2]: https://github.com/mortrevere/huffman/raw/master/doc/img/exampletree.gif "An example of tree creation"
+
