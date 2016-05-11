@@ -59,6 +59,11 @@ class codec:
             'sourceLen': 0, 'outLen': 0, 'processTime': 0,'preOutLen' : 0,'typeEntropy' : 0, 'compressionRate' : 0}
 
     def load(self, path, debug = 0):
+        """
+        Handle input from disk and header parsing
+        path is a string containing the path of the file to compress/decompress
+        """
+
         t1 = time.clock()
         self.treeLen = 0
         self.bodyLen = 0
@@ -91,12 +96,14 @@ class codec:
 
         self.stats['processTime'] = time.clock() - t1
         self.stats['sourceLen'] = len(self.buf)
+
         ext = path.split(".")[-1]
         if ext != "clh":
             p = [self.dic[k]/self.stats['sourceLen'] for k in self.dic.keys()]
             self.stats['typeEntropy'] = - sum([pi*log2(pi) for pi in p])
             learnEntropy(ext, self.stats['typeEntropy'])
             self.stats['preOutLen'] = (self.stats['typeEntropy']+min(self.stats['typeEntropy']+1,8))*self.stats['sourceLen']/16
+
         self.progress.reset()
 
     def encode(self):
@@ -115,11 +122,6 @@ class codec:
 
         self.progress.reset()
 
-        '''
-        TODO : size estimation
-        lens = {k : len(self.dic[k]) for k in self.t}
-        outLen = 0
-        '''
         addr = self.t.getIndex()
 
         self.buf = rightPad(''.join([addr[c] for c in self.buf]))
@@ -139,13 +141,13 @@ class codec:
         self.t = tree(self.header)
         longestPath = len(self.t)
         rI = self.t.getReverseIndex()
-        shortestPath = len(min(rI.keys(), key = len)) 
+        shortestPath = len(min(rI.keys(), key = len))
 
         self.buf = ''.join(['{0:08b}'.format(c) for c in self.buf])
         self.buf = self.buf[len(self.header)+16+24:]
         self.progress.max = self.bodyLen
 
-        self.buf = deque(self.buf) #using deque instead of lists brings perfs to life #way2fast4u
+        self.buf = deque(self.buf) #using deque instead of lists brings perfs to life, approaching linear time O(n)
         while self.bodyLen > 0:
             tmp = ''
             while tmp not in rI:
@@ -157,6 +159,8 @@ class codec:
             self.progress.tick()
 
         """
+        Old way of decoding : probably O(n²) due to string cutting ... quite bad
+        Kept here for comparison purpose
         while self.bodyLen > 0:
             for k in range(shortestPath,longestPath):
                 tmp = self.buf[0:k]
@@ -167,6 +171,7 @@ class codec:
             self.bodyLen -= 1
             self.progress.tick()
         """
+
         self.buf = out
         self.progress.reset()
 
@@ -176,6 +181,10 @@ class codec:
         return self.buf
 
     def write(self, path):
+        """
+        Handle output to disk
+        path is a string containing the path to the output file
+        """
         t1 = time.clock()
         self.progress.max = len(self.buf)
 
@@ -209,4 +218,4 @@ class codec:
         self.treeLen = 0
         self.isCompressed = False
         self.stats = {
-            'sourceLen': 0, 'outLen': 0, 'processTime': 0,'preOutLen' : 0,'typeEntropy' : 0, 'loadingTime': 0, 'compressionRate' : 0}
+            'sourceLen': 0, 'outLen': 0, 'processTime': 0,'preOutLen' : 0,'typeEntropy' : 0, 'compressionRate' : 0}
