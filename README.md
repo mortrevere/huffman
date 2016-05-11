@@ -1,4 +1,4 @@
-# huffman
+# Huffman
 ## Table of contents
 ## I - Huffman Tree
 ### A - Definition
