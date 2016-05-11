@@ -12,7 +12,6 @@ import tkinter as tk
 import tkinter.filedialog as tkf
 import tkinter.messagebox as tkm
 import tkinter.ttk as ttk
-import time
 import os
 
 FONT = ("Helvetica", 10)

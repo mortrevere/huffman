@@ -90,7 +90,6 @@ class codec:
                 self.header = self.header[0:-24]
 
         self.stats['processTime'] = time.clock() - t1
-        self.stats['loadingTime'] = time.clock() - t1
         self.stats['sourceLen'] = len(self.buf)
         ext = path.split(".")[-1]
         if ext != "clh":
