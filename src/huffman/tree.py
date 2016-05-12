@@ -32,6 +32,17 @@ def getASCIIIndex():
     return dic
 
 
+def getRootTree(text):
+    dic = {}
+    for c in text:
+        dic[c] = dic.get(c, 0) + 1
+    print(dic)
+    t = tree()
+    for c in dic.keys():
+        t.addChild(leaf.leaf(ord(c), dic[c]))
+    return t
+
+
 class tree:
     """
     The huffman tree itself.
@@ -118,11 +129,13 @@ class tree:
         """
         Same as organize() but with graphic visualization
         """
+        win.show(root, time)
         while len(self.children) > 2:
             self.sort()
             self.setChildren(
                 [tree([self.children[0], self.children[1]])] +
                 self.children[2:])
+            win.show(root, time)
             self.sort()
             win.show(root, time)
 
@@ -181,3 +194,6 @@ class tree:
             add = dic.get(k, "")
             s += ('{0:0' + str(m) + 'b}').format(len(add)) + add
         return s
+    
+    def __repr__(self):
+        return str(self.w)
